@@ -28,7 +28,7 @@ function Login() {
           alt="Logo"
           sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
         />
-          <Typography component="h1" variant="h5" sx={{ color: 'hotpink' }}>
+          <Typography component="h1" variant="h5" sx={{ marginBottom: 2, color: 'hotpink' }}>
             EarnNLearn
           </Typography>
           <Box component="form" noValidate className="form">
