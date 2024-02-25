@@ -64,6 +64,7 @@ function Login() {
             fullWidth
             variant="contained"
             className="signInButton"
+            sx={{ mt: 3, mb: 2, backgroundColor: '#0D99FF' }}
           >
             Sign In
           </Button>

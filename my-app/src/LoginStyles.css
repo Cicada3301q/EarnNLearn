@@ -18,7 +18,7 @@
   }
   
   .textField {
-    margin-top: 16px;
+    margin-top: 8px;
     margin-bottom: 8px;
   }
   
@@ -31,6 +31,8 @@
   }
   
   .linkText {
+    margin-top: 16px;
+    margin-bottom: 16px;
     color: #0D99FF;
     font-weight: bold;
   }
