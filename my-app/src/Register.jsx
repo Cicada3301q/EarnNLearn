@@ -1,11 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography, Box, Avatar, InputLabel } from '@mui/material';
-import './LoginStyles.css'; // Reusing the same CSS file
+import './LoginStyles.css'; 
+
 
 function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+
+  useEffect(() => {
+    const container = document.querySelector('.coinsContainer');
+    const createCoin = () => {
+        const coin = document.createElement('div');
+        coin.classList.add('coin');
+      
+        // Calculate a random position, avoiding the middle 40% of the page
+        const position = Math.random() * 100;
+        if (position > 30 && position < 70) {
+          coin.style.left = position < 50 ? '10vw' : '90vw';
+        } else {
+          coin.style.left = position + 'vw';
+        }
+      
+        coin.style.animationDuration = Math.random() * 3 + 2 + 's'; // Randomize duration
+        container.appendChild(coin);
+      
+        // Remove coin after animation ends
+        coin.addEventListener('animationend', () => {
+          coin.remove();
+        });
+      };
+
+    // Create a new coin every 300 milliseconds
+    const interval = setInterval(createCoin, 300);
+
+    return () => clearInterval(interval); // Clean up interval on component unmount
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,6 +58,7 @@ function Register() {
         alignItems: 'center',
       }}
     >
+    <div className="coinsContainer"></div>
     <Avatar
       src="/EarnNLearn.jpg"
       alt="Logo"

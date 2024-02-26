@@ -42,3 +42,35 @@
     margin-bottom: 16px;
     background-color: #0D99FF;
   }
+
+
+  /* Coins CSS Start */
+  .coinsContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Ensure the coins appear behind the form */
+  }
+  
+  .coin {
+    position: absolute;
+    width: 30px; /* Adjust size as needed */
+    height: 30px;
+    background-image: url('coin.png');
+    background-size: cover;
+    animation: fall linear infinite;
+  }
+  
+  @keyframes fall {
+    0% {
+      top: -50px;
+      opacity: 1;
+    }
+    100% {
+      top: 100vh;
+      opacity: 0;
+    }
+  }
