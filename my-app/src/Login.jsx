@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box, Avatar, InputLabel} from '@mui/material';
 import { lightBlue, red } from '@mui/material/colors';
 import './LoginStyles.css';
@@ -57,7 +58,7 @@ function Login() {
           />
           <Typography className="accountPrompt">
             Don't have an account?{' '}
-            <span className="linkText">Register.</span>
+            <Link to="/register" className="linkText">Register.</Link>
           </Typography>
           <Button
             type="submit"

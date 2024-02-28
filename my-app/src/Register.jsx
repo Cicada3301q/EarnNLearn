@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box, Avatar, InputLabel } from '@mui/material';
 import './LoginStyles.css'; 
 
@@ -16,6 +17,7 @@ function Register() {
         coin.classList.add('coin');
       
         // Calculate a random position, avoiding the middle 40% of the page
+        //need to change this so it randomly distributes the coins that fall within the middle 40% of the page/
         const position = Math.random() * 100;
         if (position > 30 && position < 70) {
           coin.style.left = position < 50 ? '10vw' : '90vw';
@@ -111,7 +113,7 @@ function Register() {
           />
           <Typography className="accountPrompt">
             Already have an account?{' '}
-            <span className="linkText">Log in.</span>
+            <Link to="/login" className="linkText">Login.</Link>
           </Typography>
           <Button
             type="submit"
