@@ -1,7 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Login'; // Adjust the path based on your file structure
+import Login from './Login';
 import Register from './Register';
+import ProfileSelect from './ProfileSelect';
+import ProfileBalance from './ProfileBalance';
 
 function App() {
   return (
@@ -9,7 +11,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {/* Redirect to /login by default */}
+        <Route path="/profiles" element={<ProfileSelect />} />
+        <Route path="/profile-balance/:id" element={<ProfileBalance />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>

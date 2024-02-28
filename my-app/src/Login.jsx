@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box, Avatar, InputLabel} from '@mui/material';
-import { lightBlue, red } from '@mui/material/colors';
 import './LoginStyles.css';
 
 function Login() {
@@ -69,6 +68,15 @@ function Login() {
           >
             Sign In
           </Button>
+          {/*route to the Profiles page for testing */}
+            <Button
+            component={Link}
+            to="/profiles"
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            >
+            Go to Profiles
+            </Button>
         </Box>
       </Box>
     </Container>

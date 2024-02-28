@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box, Avatar, InputLabel } from '@mui/material';
 import './LoginStyles.css'; 
-
+// TODO Extract coin animation, and fix 30, 70% over population
 
 function Register() {
   const [email, setEmail] = useState('');
