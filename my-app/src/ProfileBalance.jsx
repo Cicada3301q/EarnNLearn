@@ -1,9 +1,12 @@
 import React from 'react';
-import { Box, Typography, Container, Divider } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Box, Typography, Container, Divider, Button } from '@mui/material';
+import { useParams, Link } from 'react-router-dom';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import ProfileSwitch from './ProfileSwitch';
 import CircularProgressBar from './CircularProgressBar';
+
+
+
 
 function ProfileBalance() {
   const { id } = useParams();
@@ -53,6 +56,14 @@ function ProfileBalance() {
             </Box>
         ))}
         </Box>
+        <Button
+            component={Link}
+            to="/redeem-request"
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            >
+            Withdraw
+            </Button>
       </Box>
     </Container>
   );
