@@ -37,7 +37,7 @@ function RedeemRequest() {
           variant="outlined"
           value={requestName}
           onChange={(e) => setRequestName(e.target.value)}
-          sx={{ mb: 2, width: '40%' }}
+          sx={{ mb: 2, width: '30%' }}
         />
         <TextField
           label="Request Value"
@@ -46,7 +46,7 @@ function RedeemRequest() {
           value={requestValue}
           onChange={(e) => setRequestValue(e.target.value)}
           InputProps={{ inputProps: { min: 0 } }}
-          sx={{ mb: 2, width: '40%' }}
+          sx={{ mb: 2, width: '30%' }}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 4, width: '100%', justifyContent: 'center' }}>
           <Button variant="contained" color="primary" onClick={handleCreate}>
