@@ -18,12 +18,6 @@ function ProfileChores() {
 
     // Dummy data for the selected profile and transactions
     const profile = { name: 'Alice', balance: 50, lifetimeEarnings: 100 }; // Added lifetimeEarnings for demonstration
-    const transactions = [
-        { id: 1, name: 'Mow the Lawn', amount: 5, type: 'deposit' },
-        { id: 2, name: 'Weekly Allowance', amount: 10, type: 'deposit' },
-        { id: 3, name: 'Candy Store', amount: -3, type: 'withdrawal' },
-        // ... more transactions
-    ];
 
   const handleApproval = (choreId) => {
     // Approval logic here
