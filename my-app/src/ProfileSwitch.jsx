@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ToggleButtonGroup, ToggleButton, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate, useLocation } from 'react-router-dom'; 
+
+
+// TODO routing ID is hardcoded right now in the handleAlignment block
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   '& .MuiToggleButtonGroup-grouped': {
@@ -31,11 +35,23 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 }));
 
 function ProfileSwitch() {
-  const [alignment, setAlignment] = useState('balance');
+  const navigate = useNavigate();
+  const location = useLocation(); // Hook to get the current location
+  const [alignment, setAlignment] = useState(location.pathname.includes('chores') ? 'chores' : 'balance');
+
+  useEffect(() => {
+    // Update the alignment when the location changes
+    setAlignment(location.pathname.includes('chores') ? 'chores' : 'balance');
+  }, [location]);
 
   const handleAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
+      if (newAlignment === 'balance') {
+        navigate('/profile-balance/1'); // Adjust the route as needed
+      } else if (newAlignment === 'chores') {
+        navigate('/profile-chores/1'); // Adjust the route as needed
+      }
     }
   };
 
@@ -46,12 +62,12 @@ function ProfileSwitch() {
         value={alignment}
         exclusive
         onChange={handleAlignment}
-        aria-label="text alignment"
+        aria-label="Profile section"
       >
-        <StyledToggleButton value="chores" aria-label="left aligned">
+        <StyledToggleButton value="chores" aria-label="Chores">
           Chores
         </StyledToggleButton>
-        <StyledToggleButton value="balance" aria-label="centered">
+        <StyledToggleButton value="balance" aria-label="Balance">
           Balance
         </StyledToggleButton>
       </StyledToggleButtonGroup>
