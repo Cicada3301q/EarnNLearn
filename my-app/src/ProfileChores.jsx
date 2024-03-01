@@ -1,9 +1,11 @@
 import React from 'react';
-import { Box, Typography, IconButton, Paper } from '@mui/material';
+import { Box, Typography, IconButton, Paper, Fab } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ProfileSwitch from './ProfileSwitch';
 import CircularProgressBar from './CircularProgressBar';
+import { useNavigate } from 'react-router-dom'; 
 
 function ProfileChores() {
   // Dummy data for the chores
@@ -31,9 +33,15 @@ function ProfileChores() {
     // Removal logic here
   };
 
+  const navigate = useNavigate(); // Hook for navigation
+
+  const navigateToChoreCreation = () => {
+    navigate('/chore-creation'); // Adjust the path as needed
+  };
+
   return (
     <Box sx={{ margin: 2 }}>
-                <CircularProgressBar
+        <CircularProgressBar
           size={150}
           thickness={4}
           value={profile.balance}
@@ -41,8 +49,9 @@ function ProfileChores() {
           name={profile.name}
         />
     <ProfileSwitch />
+    <Box sx={{ margin: 2, paddingBottom: 10 }}>
       {chores.map((chore) => (
-        <Paper key={chore.id} sx={{ display: 'flex',width:'50%', mx: 'auto' , justifyContent: 'space-between', marginY: 1, padding: 2 }}>
+        <Paper key={chore.id} sx={{ display: 'flex',width:'50%', mx: 'auto' , justifyContent: 'space-between', marginY: 1, padding: 2,  }}>
           <Box sx={{ display: 'flex', alignItems: 'center'}}>
             <Box sx={{ bgcolor: 'grey.300', padding: 1, marginRight: 2 }}>
               <Typography sx={{ color: 'pink' }}>${chore.amount}</Typography>
@@ -63,6 +72,12 @@ function ProfileChores() {
           </Box>
         </Paper>
       ))}
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+            <Fab color="primary" aria-label="add" onClick={navigateToChoreCreation}>
+            <AddIcon />
+            </Fab>
+        </Box>
+      </Box>
     </Box>
   );
 }

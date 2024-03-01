@@ -5,6 +5,7 @@ import Register from './Register';
 import ProfileSelect from './ProfileSelect';
 import ProfileBalance from './ProfileBalance';
 import ProfileChores from './ProfileChores';
+import ChoreCreation from './ChoreCreation';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/profiles" element={<ProfileSelect />} />
         <Route path="/profile-balance/:id" element={<ProfileBalance />} />
         <Route path="/profile-chores/:id" element={<ProfileChores />} />
+        <Route path="/chore-creation" element={<ChoreCreation />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
