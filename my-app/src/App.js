@@ -7,7 +7,8 @@ import ProfileBalance from './ProfileBalance';
 import ProfileChores from './ProfileChores';
 import ChoreCreation from './ChoreCreation';
 import RedeemRequest from './RedeemRequest';
-import ProfileCreation from './ProfileCreation'
+import ProfileCreation from './ProfileCreation';
+import BabySitter from './BabySitter';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/chore-creation" element={<ChoreCreation />} />
         <Route path="/redeem-request" element={<RedeemRequest />} />
         <Route path="/add-profile" element={<ProfileCreation />} />
+        <Route path="/babysitter" element={<BabySitter />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
