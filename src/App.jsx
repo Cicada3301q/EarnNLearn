@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import ProfileSelect from "./pages/profile-select/ProfileSelect";
@@ -14,7 +14,19 @@ import HeaderBanner from "./components/header-banner/HeaderBanner";
 function App() {
   return (
     <Router>
-      <HeaderBanner />
+      <AppRoutes />
+    </Router>
+  );
+}
+
+function AppRoutes() {
+  const location = useLocation();
+  const hideBannerOnPaths = ['/login', '/register', '/'];
+  const showHeaderBanner = !hideBannerOnPaths.includes(location.pathname);
+
+  return (
+    <>
+      {showHeaderBanner && <HeaderBanner />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
@@ -27,7 +39,7 @@ function App() {
         <Route path="/add-profile" element={<ProfileCreation />} />
         <Route path="/babysitter" element={<BabySitter />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
