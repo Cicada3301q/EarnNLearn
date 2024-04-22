@@ -1,20 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import ProfileSelect from './ProfileSelect';
-import ProfileBalance from './ProfileBalance';
-import ProfileChores from './ProfileChores';
-import ChoreCreation from './ChoreCreation';
-import RedeemRequest from './RedeemRequest';
-import ProfileCreation from './ProfileCreation';
-import BabySitter from './BabySitter';
-
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import ProfileSelect from "./pages/profile-select/ProfileSelect";
+import ProfileBalance from "./pages/profile-balance/ProfileBalance";
+import ProfileChores from "./pages/profile-chores/ProfileChores";
+import ChoreCreation from "./pages/chore-creation/ChoreCreation";
+import RedeemRequest from "./pages/redeem-request/RedeemRequest";
+import ProfileCreation from "./pages/profile-creation/ProfileCreation";
+import BabySitter from "./pages/baby-sitter/BabySitter";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profiles" element={<ProfileSelect />} />
@@ -24,7 +24,6 @@ function App() {
         <Route path="/redeem-request" element={<RedeemRequest />} />
         <Route path="/add-profile" element={<ProfileCreation />} />
         <Route path="/babysitter" element={<BabySitter />} />
-        <Route path="/" element={<Login />} />
       </Routes>
     </Router>
   );

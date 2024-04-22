@@ -1,26 +1,59 @@
-import React, { useState } from 'react';
-import { Box, Typography, IconButton, Paper, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, Button } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ProfileSwitch from './ProfileSwitch';
-import CircularProgressBar from './CircularProgressBar';
-import MessageIcon from '@mui/icons-material/Message';
-
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Paper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+} from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ProfileSwitch from "../../components/profile-switch/ProfileSwitch";
+import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
+import MessageIcon from "@mui/icons-material/Message";
 
 function BabySitter() {
   // State for the feedback dialog
   const [openDialog, setOpenDialog] = useState(false);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState("");
   const [selectedChoreId, setSelectedChoreId] = useState(null);
 
   // Dummy data for the chores
   const chores = [
-    { id: 1, name: 'Make your bed', amount: 5, dueDate: '20-05', status: 'In Progress', statusColor: 'lightgreen' },
-    { id: 2, name: 'Take out the trash', amount: 5, dueDate: '21-05', status: 'Awaiting Approval', statusColor: 'green' },
-    { id: 2, name: 'Walk the dog', amount: 5, dueDate: '21-05', status: 'Awaiting Approval', statusColor: 'green' },
+    {
+      id: 1,
+      name: "Make your bed",
+      amount: 5,
+      dueDate: "20-05",
+      status: "In Progress",
+      statusColor: "lightgreen",
+    },
+    {
+      id: 2,
+      name: "Take out the trash",
+      amount: 5,
+      dueDate: "21-05",
+      status: "Awaiting Approval",
+      statusColor: "green",
+    },
+    {
+      id: 2,
+      name: "Walk the dog",
+      amount: 5,
+      dueDate: "21-05",
+      status: "Awaiting Approval",
+      statusColor: "green",
+    },
   ];
 
   // Dummy data for the selected profile
-  const profile = { name: 'Alice', balance: 50, lifetimeEarnings: 100 };
+  const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 };
 
   const handleApproval = (choreId) => {
     // Approval logic here
@@ -33,7 +66,7 @@ function BabySitter() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setFeedback('');
+    setFeedback("");
   };
 
   const handleSubmitFeedback = () => {
@@ -59,19 +92,36 @@ function BabySitter() {
       {/* <ProfileSwitch /> */}
       <Box sx={{ margin: 2, paddingBottom: 10 }}>
         {chores.map((chore) => (
-          <Paper key={chore.id} sx={{ display: 'flex', width: '50%', mx: 'auto', justifyContent: 'space-between', marginY: 1, padding: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ bgcolor: 'grey.300', padding: 1, marginRight: 2 }}>
-              <Typography sx={{ color: 'pink' }}>${chore.amount}</Typography>
+          <Paper
+            key={chore.id}
+            sx={{
+              display: "flex",
+              width: "50%",
+              mx: "auto",
+              justifyContent: "space-between",
+              marginY: 1,
+              padding: 2,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ bgcolor: "grey.300", padding: 1, marginRight: 2 }}>
+                <Typography sx={{ color: "pink" }}>${chore.amount}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="body1">{chore.name}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Due: {chore.dueDate}
+                </Typography>
+                <Typography variant="body2" sx={{ color: chore.statusColor }}>
+                  {chore.status}
+                </Typography>
+              </Box>
             </Box>
             <Box>
-              <Typography variant="body1">{chore.name}</Typography>
-              <Typography variant="body2" color="text.secondary">Due: {chore.dueDate}</Typography>
-              <Typography variant="body2" sx={{ color: chore.statusColor }}>{chore.status}</Typography>
-            </Box>
-            </Box>
-            <Box>
-              <IconButton onClick={() => handleOpenDialog(chore.id)} color="primary">
+              <IconButton
+                onClick={() => handleOpenDialog(chore.id)}
+                color="primary"
+              >
                 <MessageIcon />
               </IconButton>
               <Select
