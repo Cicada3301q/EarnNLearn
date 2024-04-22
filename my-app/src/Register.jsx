@@ -35,7 +35,7 @@ function Register() {
       };
 
     // Create a new coin every 300 milliseconds
-    const interval = setInterval(createCoin, 300);
+    const interval = setInterval(createCoin, 500);
 
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, []);

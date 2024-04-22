@@ -6,6 +6,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ProfileSwitch from './ProfileSwitch';
 import CircularProgressBar from './CircularProgressBar';
 import { useNavigate } from 'react-router-dom'; 
+import HeaderBanner from './HeaderBanner';
+
 
 function ProfileChores() {
   // Dummy data for the chores
@@ -34,45 +36,47 @@ function ProfileChores() {
   };
 
   return (
-    <Box sx={{ margin: 2 }}>
-        <CircularProgressBar
-          size={150}
-          thickness={4}
-          value={profile.balance}
-          maxValue={profile.lifetimeEarnings}
-          name={profile.name}
-        />
-    <ProfileSwitch />
-    <Box sx={{ margin: 2, paddingBottom: 10 }}>
-      {chores.map((chore) => (
-        <Paper key={chore.id} sx={{ display: 'flex',width:'50%', mx: 'auto' , justifyContent: 'space-between', marginY: 1, padding: 2,  }}>
-          <Box sx={{ display: 'flex', alignItems: 'center'}}>
-            <Box sx={{ bgcolor: 'grey.300', padding: 1, marginRight: 2 }}>
-              <Typography sx={{ color: 'pink' }}>${chore.amount}</Typography>
+    <div><HeaderBanner />
+      <Box sx={{ margin: 2 }}>
+          <CircularProgressBar
+            size={150}
+            thickness={4}
+            value={profile.balance}
+            maxValue={profile.lifetimeEarnings}
+            name={profile.name}
+          />
+      <ProfileSwitch />
+      <Box sx={{ margin: 2, paddingBottom: 10 }}>
+        {chores.map((chore) => (
+          <Paper key={chore.id} sx={{ display: 'flex', width:'60%', mx: 'auto' , justifyContent: 'space-between', marginY: 1, padding: 2,  }}>
+            <Box sx={{ display: 'flex', alignItems: 'center'}}>
+              <Box sx={{ bgcolor: 'grey.300', padding: 1, marginRight: 2 }}>
+                <Typography sx={{ color: 'pink' }}>${chore.amount}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="body1">{chore.name}</Typography>
+                <Typography variant="body2" color="text.secondary">Due: {chore.dueDate}</Typography>
+                <Typography variant="body2" sx={{ color: chore.statusColor }}>{chore.status}</Typography>
+              </Box>
             </Box>
             <Box>
-              <Typography variant="body1">{chore.name}</Typography>
-              <Typography variant="body2" color="text.secondary">Due: {chore.dueDate}</Typography>
-              <Typography variant="body2" sx={{ color: chore.statusColor }}>{chore.status}</Typography>
+              <IconButton onClick={() => handleApproval(chore.id)} color="success">
+                <CheckCircleOutlineIcon />
+              </IconButton>
+              <IconButton onClick={() => handleRemoval(chore.id)} color="error">
+                <DeleteOutlineIcon />
+              </IconButton>
             </Box>
+          </Paper>
+        ))}
+          <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+              <Fab color="primary" aria-label="add" onClick={navigateToChoreCreation}>
+              <AddIcon />
+              </Fab>
           </Box>
-          <Box>
-            <IconButton onClick={() => handleApproval(chore.id)} color="success">
-              <CheckCircleOutlineIcon />
-            </IconButton>
-            <IconButton onClick={() => handleRemoval(chore.id)} color="error">
-              <DeleteOutlineIcon />
-            </IconButton>
-          </Box>
-        </Paper>
-      ))}
-        <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
-            <Fab color="primary" aria-label="add" onClick={navigateToChoreCreation}>
-            <AddIcon />
-            </Fab>
         </Box>
       </Box>
-    </Box>
+    </div>
   );
 }
 
