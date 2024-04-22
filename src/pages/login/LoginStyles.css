@@ -59,7 +59,7 @@
     position: absolute;
     width: 30px; /* Adjust size as needed */
     height: 30px;
-    background-image: url('coin.png');
+    background-image: url('../../../public/coin.png');
     background-size: cover;
     animation: fall linear infinite;
   }
