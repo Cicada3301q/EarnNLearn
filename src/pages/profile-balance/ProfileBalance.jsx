@@ -4,7 +4,6 @@ import { useParams, Link } from "react-router-dom";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ProfileSwitch from "../../components/profile-switch/ProfileSwitch";
 import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
-import HeaderBanner from "../../components/header-banner/HeaderBanner";
 
 function ProfileBalance() {
   const { id } = useParams();
@@ -20,7 +19,6 @@ function ProfileBalance() {
 
   return (
     <div>
-      <HeaderBanner />
       <Container component="main" maxWidth="sm">
         <Box
           sx={{

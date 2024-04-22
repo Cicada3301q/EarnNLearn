@@ -6,7 +6,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ProfileSwitch from "../../components/profile-switch/ProfileSwitch";
 import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
 import { useNavigate } from "react-router-dom";
-import HeaderBanner from "../../components/header-banner/HeaderBanner";
 
 function ProfileChores() {
   // Dummy data for the chores
@@ -56,7 +55,6 @@ function ProfileChores() {
 
   return (
     <div>
-      <HeaderBanner />
       <Box sx={{ margin: 2 }}>
         <CircularProgressBar
           size={150}

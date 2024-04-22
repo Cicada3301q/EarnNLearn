@@ -9,10 +9,12 @@ import ChoreCreation from "./pages/chore-creation/ChoreCreation";
 import RedeemRequest from "./pages/redeem-request/RedeemRequest";
 import ProfileCreation from "./pages/profile-creation/ProfileCreation";
 import BabySitter from "./pages/baby-sitter/BabySitter";
+import HeaderBanner from "./components/header-banner/HeaderBanner";
 
 function App() {
   return (
     <Router>
+      <HeaderBanner />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
