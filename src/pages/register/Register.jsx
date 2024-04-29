@@ -47,13 +47,27 @@ function Register() {
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    // Handle registration logic here
+    const requestBody = {
+      firstName: "joe",
+      lastName: "dirt",
+      email: email,
+      password: password
+    };
+  
+    await fetch('http://localhost:8080/api/user/register', {
+      method: 'POST', // Corrected to 'POST' instead of 'post'
+      headers: {
+        'Content-Type': 'application/json' // Specify the content type as JSON
+      },
+      body: JSON.stringify(requestBody) // Convert object to JSON string
+    });
+  
     console.log(email, password);
   };
 

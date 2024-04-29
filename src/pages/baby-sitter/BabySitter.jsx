@@ -13,8 +13,6 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import ProfileSwitch from "../../components/profile-switch/ProfileSwitch";
 import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
 import MessageIcon from "@mui/icons-material/Message";
 
