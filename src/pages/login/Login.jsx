@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   TextField,
@@ -14,11 +14,40 @@ import "./LoginStyles.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle login logic here
-    console.log(email, password);
+    const requestBody = {
+      email,
+      password
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Login successful:', data);
+        console.log("data", data);
+        // Assuming the response contains a JWT token that and how we store it?
+        // localStorage.setItem('token', data.token);
+        // Navigate to the profile page or dashboard upon successful login
+        navigate('/profiles');
+      } else {
+        throw new Error(data.message || 'Failed to login');
+      }
+    } catch (error) {
+      console.error('Login failed:', error.message);
+    }
   };
 
   return (
@@ -44,16 +73,18 @@ function Login() {
           EarnNLearn
         </Typography>
         <Box component="form" noValidate className="form">
-          <InputLabel htmlFor="username">Username</InputLabel>
+          <InputLabel htmlFor="email">Email</InputLabel>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="username"
-            name="username"
-            autoComplete="username"
+            id="email"
+            name="email"
+            autoComplete="email"
             autoFocus
             className="textField"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <InputLabel htmlFor="password">Password</InputLabel>
           <TextField
@@ -61,11 +92,12 @@ function Login() {
             required
             fullWidth
             name="password"
-            label=""
             type="password"
             id="password"
             autoComplete="current-password"
             className="textField"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Typography className="accountPrompt">
             Don't have an account?{" "}
@@ -79,6 +111,7 @@ function Login() {
             variant="contained"
             className="signInButton"
             sx={{ mt: 3, mb: 2, backgroundColor: "#0D99FF" }}
+            onClick={(e) => handleSubmit(e)}
           >
             Sign In
           </Button>
