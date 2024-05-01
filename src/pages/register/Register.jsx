@@ -27,7 +27,8 @@ function Register() {
       //need to change this so it randomly distributes the coins that fall within the middle 40% of the page/
       const position = Math.random() * 100;
       if (position > 30 && position < 70) {
-        coin.style.left = position < 50 ? "10vw" : "90vw";
+        //math.random between 0-30 and 70-100
+        coin.style.left = position < 50 ? `${math.random()*30}vw` : `${math.floor(70 +math.random()*30)}vw`;
       } else {
         coin.style.left = position + "vw";
       }
@@ -42,7 +43,7 @@ function Register() {
     };
 
     // Create a new coin every 300 milliseconds
-    const interval = setInterval(createCoin, 500);
+    const interval = setInterval(createCoin, 200);
 
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, []);
@@ -60,7 +61,7 @@ function Register() {
       password: password
     };
   
-    await fetch('http://localhost:8080/api/user/register', {
+    await fetch('http://localhost:8080/api/user/register-parent', {
       method: 'POST', // Corrected to 'POST' instead of 'post'
       headers: {
         'Content-Type': 'application/json' // Specify the content type as JSON
