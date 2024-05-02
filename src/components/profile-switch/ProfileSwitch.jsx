@@ -1,62 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { ToggleButtonGroup, ToggleButton, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useNavigate, useLocation } from 'react-router-dom'; 
-
+import React, { useState, useEffect } from "react";
+import { ToggleButtonGroup, ToggleButton, Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // TODO routing ID is hardcoded right now in the handleAlignment block
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  '& .MuiToggleButtonGroup-grouped': {
+  "& .MuiToggleButtonGroup-grouped": {
     margin: theme.spacing(0.5),
     border: 0,
-    '&.Mui-disabled': {
+    "&.Mui-disabled": {
       border: 0,
     },
-    '&:not(:first-of-type)': {
+    "&:not(:first-of-type)": {
       borderRadius: theme.shape.borderRadius,
     },
-    '&:first-of-type': {
+    "&:first-of-type": {
       borderRadius: theme.shape.borderRadius,
     },
   },
 }));
 
 const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
-  '&.Mui-selected, &.Mui-selected:hover': {
-    color: 'white',
-    backgroundColor: 'pink',
+  "&.Mui-selected, &.Mui-selected:hover": {
+    color: "white",
+    backgroundColor: "pink",
   },
-  backgroundColor: 'white',
-  color: 'black',
+  backgroundColor: "white",
+  color: "black",
   "&:hover": {
     backgroundColor: "lightblue",
-  }
+  },
 }));
 
 function ProfileSwitch() {
   const navigate = useNavigate();
   const location = useLocation(); // Hook to get the current location
-  const [alignment, setAlignment] = useState(location.pathname.includes('chores') ? 'chores' : 'balance');
+  const [alignment, setAlignment] = useState(
+    location.pathname.includes("chores") ? "chores" : "balance"
+  );
 
   useEffect(() => {
     // Update the alignment when the location changes
-    setAlignment(location.pathname.includes('chores') ? 'chores' : 'balance');
+    setAlignment(location.pathname.includes("chores") ? "chores" : "balance");
   }, [location]);
 
   const handleAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
-      if (newAlignment === 'balance') {
-        navigate('/profile-balance/1'); // Adjust the route as needed
-      } else if (newAlignment === 'chores') {
-        navigate('/profile-chores/1'); // Adjust the route as needed
+      if (newAlignment === "balance") {
+        navigate("/profile-balance/1"); // Adjust the route as needed
+      } else if (newAlignment === "chores") {
+        navigate("/profile-chores/1"); // Adjust the route as needed
       }
     }
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+    <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
       <StyledToggleButtonGroup
         size="small"
         value={alignment}

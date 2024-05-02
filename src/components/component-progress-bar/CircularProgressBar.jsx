@@ -1,19 +1,24 @@
-import React from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import React from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 function CircularProgressBar(props) {
   const { size, thickness, value, maxValue } = props;
   const normalise = (value) => ((value - 0) * 100) / (maxValue - 0);
 
   return (
-    <Box position="relative" display="inline-flex" justifyContent="center" alignItems="center">
+    <Box
+      position="relative"
+      display="inline-flex"
+      justifyContent="center"
+      alignItems="center"
+    >
       <CircularProgress
         variant="determinate"
         value={100} // Full circle
         size={size}
         thickness={thickness}
         sx={{
-          color: 'grey.300',
+          color: "grey.300",
         }}
       />
       <CircularProgress
@@ -22,8 +27,8 @@ function CircularProgressBar(props) {
         size={size}
         thickness={thickness}
         sx={{
-          color: 'green',
-          position: 'absolute',
+          color: "green",
+          position: "absolute",
           top: 0,
           left: 0,
         }}
@@ -46,7 +51,7 @@ function CircularProgressBar(props) {
           ${props.value.toFixed(2)}
         </Typography>
         <Typography variant="body2" component="div" color="text.secondary">
-         {Math.round(normalise(value))}% spent
+          {Math.round(normalise(value))}% spent
         </Typography>
       </Box>
     </Box>
@@ -60,8 +65,14 @@ function ProfileBalance() {
   const lifetimeEarnings = 45.71;
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-      <CircularProgressBar size={150} thickness={4} value={currentBalance} maxValue={lifetimeEarnings} name="Alice" />
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+      <CircularProgressBar
+        size={150}
+        thickness={4}
+        value={currentBalance}
+        maxValue={lifetimeEarnings}
+        name="Alice"
+      />
     </Box>
   );
 }

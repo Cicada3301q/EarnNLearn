@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import ProfileSelect from "./pages/profile-select/ProfileSelect";
@@ -21,7 +26,7 @@ function App() {
 
 function AppRoutes() {
   const location = useLocation();
-  const hideBannerOnPaths = ['/login', '/register', '/'];
+  const hideBannerOnPaths = ["/login", "/register", "/"];
   const showHeaderBanner = !hideBannerOnPaths.includes(location.pathname);
 
   return (

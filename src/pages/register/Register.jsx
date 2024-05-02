@@ -28,7 +28,10 @@ function Register() {
       const position = Math.random() * 100;
       if (position > 30 && position < 70) {
         //math.random between 0-30 and 70-100
-        coin.style.left = position < 50 ? `${math.random()*30}vw` : `${math.floor(70 +math.random()*30)}vw`;
+        coin.style.left =
+          position < 50
+            ? `${math.random() * 30}vw`
+            : `${math.floor(70 + math.random() * 30)}vw`;
       } else {
         coin.style.left = position + "vw";
       }
@@ -58,17 +61,17 @@ function Register() {
       firstName: "joe",
       lastName: "dirt",
       email: email,
-      password: password
+      password: password,
     };
-  
-    await fetch('http://localhost:8080/api/user/register-parent', {
-      method: 'POST', // Corrected to 'POST' instead of 'post'
+
+    await fetch("http://localhost:8080/api/user/register-parent", {
+      method: "POST", // Corrected to 'POST' instead of 'post'
       headers: {
-        'Content-Type': 'application/json' // Specify the content type as JSON
+        "Content-Type": "application/json", // Specify the content type as JSON
       },
-      body: JSON.stringify(requestBody) // Convert object to JSON string
+      body: JSON.stringify(requestBody), // Convert object to JSON string
     });
-  
+
     console.log(email, password);
   };
 

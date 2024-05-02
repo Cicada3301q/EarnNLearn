@@ -20,33 +20,33 @@ function Login() {
     event.preventDefault();
     const requestBody = {
       email,
-      password
+      password,
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/user/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/api/user/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
-        credentials: 'include'
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Login successful:', data);
+        console.log("Login successful:", data);
         console.log("data", data);
         // Assuming the response contains a JWT token that and how we store it?
         // localStorage.setItem('token', data.token);
         // Navigate to the profile page or dashboard upon successful login
-        navigate('/profiles');
+        navigate("/profiles");
       } else {
-        throw new Error(data.message || 'Failed to login');
+        throw new Error(data.message || "Failed to login");
       }
     } catch (error) {
-      console.error('Login failed:', error.message);
+      console.error("Login failed:", error.message);
     }
   };
 
