@@ -4,7 +4,3 @@ export enum METHOD {
   PUT = "PUT",
   DELETE = "DELETE",
 }
-
-export enum CONTENT_TYPE {
-  APP_JSON = "application/json",
-}

@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Login from "./pages/login/Login";
+import Login from "./pages/Login";
 import Register from "./pages/register/Register";
-import ProfileSelect from "./pages/profile-select/ProfileSelect";
+import ProfileSelect from "./pages/ProfileSelect";
 import ProfileBalance from "./pages/profile-balance/ProfileBalance";
 import ProfileChores from "./pages/profile-chores/ProfileChores";
 import ChoreCreation from "./pages/chore-creation/ChoreCreation";

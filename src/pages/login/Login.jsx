@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import "./LoginStyles.css";
 import { callApi } from "../../utils/api.util";
-import { CONTENT_TYPE, METHOD } from "../../constants/enums";
+import { METHOD } from "../../constants/enums";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -29,7 +29,6 @@ function Login() {
       const response = await callApi(
         "/api/user/login",
         METHOD.POST,
-        CONTENT_TYPE.APP_JSON,
         requestBody
       );
 
@@ -38,8 +37,7 @@ function Login() {
       if (response.ok) {
         console.log("Login successful:", data);
         console.log("data", data);
-        // Assuming the response contains a JWT token that and how we store it?
-        // localStorage.setItem('token', data.token);
+
         // Navigate to the profile page or dashboard upon successful login
         navigate("/profiles");
       } else {
