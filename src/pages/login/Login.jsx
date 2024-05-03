@@ -35,16 +35,10 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Login successful:", data);
-        console.log("data", data);
-
-        // Navigate to the profile page or dashboard upon successful login
         navigate("/profiles");
-      } else {
-        throw new Error(data.message || "Failed to login");
       }
     } catch (error) {
-      console.error("Login failed:", error.message);
+      alert("failed to login, sorry", error.message);
     }
   };
 
