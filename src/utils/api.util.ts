@@ -1,17 +1,16 @@
 import { METHOD } from "../constants/enums";
 
-export const callApi = async (
-  apiRoute: string,
-  method: METHOD,
-  contentType: string,
-  body?: any
-) => {
-  return await fetch(`${process.env.API_BASE}${apiRoute}`, {
-    method: method,
-    headers: {
-      "Content-Type": contentType,
-    },
-    body: JSON.stringify(body),
-    credentials: "include",
-  });
+export const callApi = async (apiRoute: string, method: METHOD, body?: any) => {
+  try {
+    return await fetch(`${process.env.API_BASE}${apiRoute}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error(`FETCH ERROR: ${error}`);
+  }
 };

@@ -9,6 +9,8 @@ import {
   Avatar,
   InputLabel,
 } from "@mui/material";
+import { callApi } from "../../utils/api.util";
+import { METHOD } from "../../constants/enums";
 // import './LoginStyles.css';
 // TODO Extract coin animation, and fix 30, 70% over population
 
@@ -64,13 +66,7 @@ function Register() {
       password: password,
     };
 
-    await fetch("http://localhost:8080/api/user/register-parent", {
-      method: "POST", // Corrected to 'POST' instead of 'post'
-      headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
-      body: JSON.stringify(requestBody), // Convert object to JSON string
-    });
+    await callApi("/api/user/register-parent", METHOD.POST, requestBody);
 
     console.log(email, password);
   };
