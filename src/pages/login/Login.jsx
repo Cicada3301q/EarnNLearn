@@ -10,6 +10,8 @@ import {
   InputLabel,
 } from "@mui/material";
 import "./LoginStyles.css";
+import { callApi } from "../../utils/api.util";
+import { CONTENT_TYPE, METHOD } from "../../constants/enums";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -24,14 +26,12 @@ function Login() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-        credentials: "include",
-      });
+      const response = await callApi(
+        "/api/user/login",
+        METHOD.POST,
+        CONTENT_TYPE.APP_JSON,
+        requestBody
+      );
 
       const data = await response.json();
 
