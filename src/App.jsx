@@ -39,7 +39,7 @@ function AppRoutes() {
         <Route path="/profiles" element={<ProfileSelect />} />
         <Route path="/profile-balance/:id" element={<ProfileBalance />} />
         <Route path="/profile-chores/:childId" element={<ProfileChores />} />
-        <Route path="/chore-creation" element={<ChoreCreation />} />
+        <Route path="/create-chore/:childId" element={<ChoreCreation />} />
         <Route path="/redeem-request" element={<RedeemRequest />} />
         <Route path="/add-profile" element={<ProfileCreation />} />
         <Route path="/babysitter" element={<BabySitter />} />

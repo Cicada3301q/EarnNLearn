@@ -39,6 +39,9 @@ function ProfileChores() {
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
+  const navigateToChoreCreation = () => {
+    navigate(`/create-chore/${childId}`);
+  };
 
   return (
     <div>
@@ -100,7 +103,7 @@ function ProfileChores() {
             <Fab
               color="primary"
               aria-label="add"
-              // onClick={navigateToChoreCreation}
+              onClick={navigateToChoreCreation}
             >
               <AddIcon />
             </Fab>
