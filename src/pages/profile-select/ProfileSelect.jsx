@@ -87,7 +87,7 @@ function ProfileSelect() {
         {children.map((child, index) => (
           <Link
             key={child.id}
-            to={`/profile-balance/${child.id}`}
+            to={`/profile-chores/${child.id}`}
             style={{ textDecoration: "none", width: "100%" }}
           >
             <Box

@@ -38,7 +38,7 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/profiles" element={<ProfileSelect />} />
         <Route path="/profile-balance/:id" element={<ProfileBalance />} />
-        <Route path="/profile-chores/:id" element={<ProfileChores />} />
+        <Route path="/profile-chores/:childId" element={<ProfileChores />} />
         <Route path="/chore-creation" element={<ChoreCreation />} />
         <Route path="/redeem-request" element={<RedeemRequest />} />
         <Route path="/add-profile" element={<ProfileCreation />} />
