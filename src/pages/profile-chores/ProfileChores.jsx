@@ -9,7 +9,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 function ProfileChores() {
   const { childId } = useParams();
-  console.log(childId);
   const [chores, setChores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({
@@ -36,6 +35,22 @@ function ProfileChores() {
       });
   }, []);
 
+  const removeChore = (choreId) => {
+    fetch(`http://localhost:8080/api/chores/delete/${choreId}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then(() => {
+        // Update the local state to reflect the deletion
+        const updatedChores = chores.filter(
+          (chore) => chore.choreId !== choreId
+        );
+        setChores(updatedChores);
+      })
+      .catch((error) => {
+        console.error("Failed to delete chore", error);
+      });
+  };
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -57,7 +72,7 @@ function ProfileChores() {
         <Box sx={{ margin: 2, paddingBottom: 10 }}>
           {chores.map((chore) => (
             <Paper
-              key={chore.id}
+              key={chore.choreId}
               sx={{
                 display: "flex",
                 width: "60%",
@@ -91,7 +106,7 @@ function ProfileChores() {
                   <CheckCircleOutlineIcon />
                 </IconButton>
                 <IconButton
-                  onClick={() => console.log("Remove clicked")} // Replace with actual function
+                  onClick={() => removeChore(chore.choreId)}
                   color="error"
                 >
                   <DeleteOutlineIcon />
