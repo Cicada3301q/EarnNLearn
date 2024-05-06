@@ -12,12 +12,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 function ChoreCreation() {
   const { childId } = useParams();
   const navigate = useNavigate();
   const [choreName, setChoreName] = useState("");
-  const [choreValue, setChoreValue] = useState(3);
+  const [choreValue, setChoreValue] = useState(0);
   const [dueDate, setDueDate] = useState(null);
 
   const handleCreate = () => {
@@ -26,8 +27,8 @@ function ChoreCreation() {
       const choreData = {
         title: choreName,
         amount: choreValue,
-        dueDate: "2024-05-10T00:00:00.000Z", //dueDate.toISOString().split("T")[0] date is not working
-        status: "COMPLETED", //get status
+        dueDate: moment(dueDate).toISOString(), // Format dueDate
+        status: "NOT_ACCEPTED", //default status for chores
         childUserId: childId, // Include the childId in the chore data
       };
 
