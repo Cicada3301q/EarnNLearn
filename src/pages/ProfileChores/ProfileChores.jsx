@@ -3,8 +3,8 @@ import { Box, Typography, IconButton, Paper, Fab } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import ProfileSwitch from "../../components/profile-switch/ProfileSwitch";
-import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
+import ProfileSwitch from "../../components/ProfileSwitch";
+import CircularProgressBar from "../../components/CircularProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
 
 function ProfileChores() {

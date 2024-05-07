@@ -2,8 +2,8 @@ import React from "react";
 import { Box, Typography, Container, Divider, Button } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import ProfileSwitch from "../../components/profile-switch/ProfileSwitch";
-import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
+import ProfileSwitch from "../../components/ProfileSwitch";
+import CircularProgressBar from "../../components/CircularProgressBar";
 
 function ProfileBalance() {
   const { id } = useParams();
