@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
@@ -12,11 +12,20 @@ import {
 import "./LoginStyles.css";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
+import { getCookie } from "../../utils/auth.util";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const isAuth = getCookie("jwt");
+
+    if (isAuth) {
+      navigate("/profiles");
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
