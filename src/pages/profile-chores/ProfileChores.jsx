@@ -40,15 +40,28 @@ function ProfileChores() {
       method: "DELETE",
       credentials: "include",
     })
-      .then(() => {
-        // Update the local state to reflect the deletion
-        const updatedChores = chores.filter(
-          (chore) => chore.choreId !== choreId
-        );
-        setChores(updatedChores);
+      .then((response) => {
+        if (response.ok) {
+          // Update the local state to reflect the deletion
+          const updatedChores = chores.filter(
+            (chore) => chore.choreId !== choreId
+          );
+          setChores(updatedChores);
+          alert("Chore successfully deleted"); // use toast here? alert is kinda basic
+        } else {
+          // Handle different server responses if the operation failed
+          console.error(
+            "Failed to delete chore, server responded with:",
+            response.status
+          );
+          response
+            .text()
+            .then((text) => alert(`Failed to delete chore: ${text}`));
+        }
       })
       .catch((error) => {
         console.error("Failed to delete chore", error);
+        alert("Failed to delete chore due to an error: " + error.message);
       });
   };
   if (loading) {
