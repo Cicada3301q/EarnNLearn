@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import PageWrapper from "../../components/PageWrapper";
 import { useNavigate } from "react-router-dom";
 import {
-  Container,
   TextField,
   Button,
   Typography,
@@ -33,7 +33,7 @@ function ProfileCreation() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <PageWrapper>
       <Box
         sx={{
           marginTop: 8,
@@ -94,7 +94,7 @@ function ProfileCreation() {
           </Stack>
         </Box>
       </Box>
-    </Container>
+    </PageWrapper>
   );
 }
 

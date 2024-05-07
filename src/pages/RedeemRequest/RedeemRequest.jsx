@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Stack,
-  Avatar,
-} from "@mui/material";
+import { Typography, TextField, Button, Stack, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import PageWrapper from "../../components/PageWrapper";
 
 function RedeemRequest() {
   const navigate = useNavigate();
@@ -30,14 +24,7 @@ function RedeemRequest() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        p: 3,
-      }}
-    >
+    <PageWrapper>
       <Avatar
         src="/EarnNLearn.jpg"
         alt="Logo"
@@ -74,7 +61,7 @@ function RedeemRequest() {
           Cancel
         </Button>
       </Stack>
-    </Box>
+    </PageWrapper>
   );
 }
 
