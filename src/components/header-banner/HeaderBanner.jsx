@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
+import { callApi } from "../../utils/api.util";
+import { METHOD } from "../../constants/enums";
 
 function HeaderBanner() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,11 +31,14 @@ function HeaderBanner() {
     handleMenuClose();
   };
 
-  const handleSignOut = () => {
-    // Add your sign out logic here
-    console.log("Signing out...");
-    // For example, navigating to the login page after sign out
-    navigate("/login");
+  const handleSignOut = async () => {
+    try {
+      await callApi("/api/user/logout", METHOD.POST);
+      navigate("/login");
+    } catch (error) {
+      // we should be adding a toast message or something like that telling the user we failed to log them out
+      alert("We failed to log you out :(");
+    }
   };
 
   return (
