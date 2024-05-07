@@ -8,6 +8,7 @@ import PageWrapper from "../../components/PageWrapper";
 import { PageTitle } from "../../components/Typography";
 import ProfileSelectSkeleton from "./ProfileSelect.skeleton";
 import * as S from "./ProfileSelect.css";
+import { toast } from "react-toastify";
 
 function ProfileSelect() {
   const [children, setChildren] = useState([]);
@@ -37,15 +38,13 @@ function ProfileSelect() {
 
   useEffect(() => {
     const fetchChildren = async () => {
-      const response = await callApi("/api/user/children", METHOD.GET);
-
-      if (response.ok) {
+      try {
+        const response = await callApi("/api/user/children", METHOD.GET);
         const data = await response.json();
         setChildren(data);
-      } else {
-        console.error("Failed to fetch children");
+      } catch (error) {
+        toast.error("Whoops, failed to load children");
       }
-
       setLoading(false);
     };
 
