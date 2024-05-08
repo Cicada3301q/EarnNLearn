@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Container, Button, Avatar } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
+import { PageTitle } from "../../components/Typography";
+import ProfileSelectSkeleton from "./ProfileSelect.skeleton";
+import * as S from "./ProfileSelect.css";
+import { toast } from "react-toastify";
 
 function ProfileSelect() {
-  // Dummy data for kids' profiles with unique colors
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,81 +38,56 @@ function ProfileSelect() {
 
   useEffect(() => {
     const fetchChildren = async () => {
-      const response = await callApi("/api/user/children", METHOD.GET);
-
-      if (response.ok) {
+      try {
+        const response = await callApi("/api/user/children", METHOD.GET);
         const data = await response.json();
         setChildren(data);
-      } else {
-        console.error("Failed to fetch children");
+      } catch (error) {
+        toast.error("Whoops, failed to load children");
       }
-
       setLoading(false);
     };
 
     fetchChildren();
   }, []);
 
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
-
-  if (children.length === 0) {
-    return <Typography>No children found.</Typography>;
-  }
-
   return (
     <PageWrapper>
-      <Avatar
-        src="/EarnNLearn.jpg"
-        alt="Logo"
-        sx={{ width: 100, height: 100, marginBottom: 2 }}
-      />
-      <Typography component="h1" variant="h4" sx={{ marginBottom: 3 }}>
-        Profiles
-      </Typography>
-      {children.map((child, index) => (
-        <Link
-          key={child.id}
-          to={`/profile-balance/${child.id}`}
-          style={{ textDecoration: "none", width: "100%" }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: 2,
-              marginBottom: 1,
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              height: 60,
-              "&:hover": {
-                backgroundColor: "#f0f0f0",
-                cursor: "pointer",
-              },
-            }}
-          >
-            <Avatar
-              sx={{
-                marginRight: 2,
-                backgroundColor: colors[index % colors.length],
-              }}
-            />
-            <Typography variant="h6">
-              {child.firstName} {child.lastName}
-            </Typography>
-          </Box>
-        </Link>
-      ))}
-      <Button
+      <S.Logo src="/EarnNLearn.jpg" alt="Logo" />
+      <PageTitle>Profiles</PageTitle>
+      {loading ? (
+        <ProfileSelectSkeleton />
+      ) : (
+        <S.List>
+          {children.length === 0 ? (
+            <Typography>No Children Found, please add one!</Typography>
+          ) : (
+            children.map((child, index) => (
+              <Link
+                key={child.id}
+                to={`/profile-balance/${child.id}`}
+                style={{ textDecoration: "none", width: "100%" }}
+              >
+                <S.ProfileItem>
+                  <S.ItemAvatar
+                    backgroundColor={colors[index % colors.length]}
+                  />
+                  <Typography variant="h6">
+                    {child.firstName} {child.lastName}
+                  </Typography>
+                </S.ProfileItem>
+              </Link>
+            ))
+          )}
+        </S.List>
+      )}
+      <S.CreateChildButton
+        disabled={loading}
         variant="contained"
-        sx={{ marginTop: 2 }}
         startIcon={<AddIcon />}
-        component={Link}
-        to="/add-profile"
       >
         Add Profile
-      </Button>
+      </S.CreateChildButton>
     </PageWrapper>
   );
 }
