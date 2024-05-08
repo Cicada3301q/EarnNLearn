@@ -13,7 +13,7 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import CircularProgressBar from "../../components/component-progress-bar/CircularProgressBar";
+import CircularProgressBar from "../../components/CircularProgressBar";
 import MessageIcon from "@mui/icons-material/Message";
 
 function BabySitter() {

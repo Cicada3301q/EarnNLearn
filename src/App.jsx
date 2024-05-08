@@ -1,15 +1,15 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/register/Register";
+import Register from "./pages/Register";
 import ProfileSelect from "./pages/ProfileSelect";
-import ProfileBalance from "./pages/profile-balance/ProfileBalance";
-import ProfileChores from "./pages/profile-chores/ProfileChores";
-import ChoreCreation from "./pages/chore-creation/ChoreCreation";
-import RedeemRequest from "./pages/redeem-request/RedeemRequest";
-import ProfileCreation from "./pages/profile-creation/ProfileCreation";
-import BabySitter from "./pages/baby-sitter/BabySitter";
-import HeaderBanner from "./components/header-banner/HeaderBanner";
+import ProfileBalance from "./pages/ProfileBalance";
+import ProfileChores from "./pages/ProfileChores";
+import ChoreCreation from "./pages/ChoreCreation";
+import RedeemRequest from "./pages/RedeemRequest";
+import ProfileCreation from "./pages/ProfileCreation";
+import BabySitter from "./pages/BabySitter";
+import HeaderBanner from "./components/HeaderBanner";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
 const App = () => {

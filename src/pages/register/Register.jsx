@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  Container,
   TextField,
   Button,
   Typography,
@@ -11,6 +10,7 @@ import {
 } from "@mui/material";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
+import PageWrapper from "../../components/PageWrapper";
 // import './LoginStyles.css';
 // TODO Extract coin animation, and fix 30, 70% over population
 
@@ -72,93 +72,79 @@ function Register() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
+    <PageWrapper>
+      <div className="coinsContainer"></div>
+      <Avatar
+        src="/EarnNLearn.jpg"
+        alt="Logo"
+        sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
+      />
+      <Typography
+        component="h1"
+        variant="h5"
+        sx={{ marginBottom: 2, color: "hotpink" }}
       >
-        <div className="coinsContainer"></div>
-        <Avatar
-          src="/EarnNLearn.jpg"
-          alt="Logo"
-          sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
+        EarnNLearn
+      </Typography>
+      <Box component="form" noValidate onSubmit={handleSubmit} className="form">
+        <InputLabel htmlFor="email">Email</InputLabel>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="textField"
         />
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{ marginBottom: 2, color: "hotpink" }}
-        >
-          EarnNLearn
+        <InputLabel htmlFor="password">Password</InputLabel>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label=""
+          type="password"
+          id="password"
+          autoComplete="new-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="textField"
+        />
+        <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="confirmPassword"
+          label=""
+          type="password"
+          id="confirmPassword"
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="textField"
+        />
+        <Typography className="accountPrompt">
+          Already have an account?{" "}
+          <Link to="/login" className="linkText">
+            Login.
+          </Link>
         </Typography>
-        <Box
-          component="form"
-          noValidate
-          onSubmit={handleSubmit}
-          className="form"
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          className="signInButton"
+          sx={{ mt: 3, mb: 2, backgroundColor: "#0D99FF" }}
         >
-          <InputLabel htmlFor="email">Email</InputLabel>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="textField"
-          />
-          <InputLabel htmlFor="password">Password</InputLabel>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label=""
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="textField"
-          />
-          <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="confirmPassword"
-            label=""
-            type="password"
-            id="confirmPassword"
-            autoComplete="new-password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="textField"
-          />
-          <Typography className="accountPrompt">
-            Already have an account?{" "}
-            <Link to="/login" className="linkText">
-              Login.
-            </Link>
-          </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            className="signInButton"
-            sx={{ mt: 3, mb: 2, backgroundColor: "#0D99FF" }}
-          >
-            Register
-          </Button>
-        </Box>
+          Register
+        </Button>
       </Box>
-    </Container>
+    </PageWrapper>
   );
 }
 
