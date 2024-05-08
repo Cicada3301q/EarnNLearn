@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { callApi } from "../../utils/api.util";
@@ -60,7 +59,7 @@ function ProfileSelect() {
       ) : (
         <S.List>
           {children.length === 0 ? (
-            <Typography>No Children Found, please add one!</Typography>
+            <S.MessageContainer>No children registered.</S.MessageContainer>
           ) : (
             children.map((child, index) => (
               <Link
@@ -72,9 +71,9 @@ function ProfileSelect() {
                   <S.ItemAvatar
                     backgroundColor={colors[index % colors.length]}
                   />
-                  <Typography variant="h6">
+                  <S.ItemText>
                     {child.firstName} {child.lastName}
-                  </Typography>
+                  </S.ItemText>
                 </S.ProfileItem>
               </Link>
             ))

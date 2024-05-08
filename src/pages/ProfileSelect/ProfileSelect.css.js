@@ -4,6 +4,7 @@ import {
   Button,
   css,
   styled,
+  Typography,
 } from "@mui/material";
 
 export const Logo = styled(MuiAvatar)(
@@ -17,23 +18,33 @@ export const Logo = styled(MuiAvatar)(
 export const List = styled("div")(
   () => css`
     margin-top: 24px;
-    width: 100%;
+    padding: 24px;
+    width: 60%;
+  `
+);
+
+export const MessageContainer = styled("div")(
+  ({ theme }) => css`
+    text-align: center;
+    font-size: ${theme.typography.h5};
+    font-weight: 600;
+    color: ${theme.palette.primary.light};
   `
 );
 
 export const ProfileItem = styled(MuiBox)(
-  () => css`
+  ({ theme }) => css`
     display: flex;
     align-items: center;
     padding: 16px;
     margin-bottom: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid ${theme.palette.grey[400]};
     border-radius: 5px;
     height: 60px;
     gap: 16px;
 
     :hover {
-      background-color: #f0f0f0;
+      background-color: ${theme.palette.grey[300]};
       cursor: pointer;
     }
   `
@@ -42,8 +53,15 @@ export const ProfileItem = styled(MuiBox)(
 export const ItemAvatar = styled(MuiAvatar, {
   shouldForwardProp: (prop) => prop !== "backgroundColor",
 })(
-  ({ backgroundColor }) => css`
-    background-color: ${backgroundColor};
+  ({ theme }) => css`
+    background-color: ${theme.palette.grey[600]};
+  `
+);
+
+export const ItemText = styled(Typography)(
+  ({ theme }) => css`
+    font-size: ${theme.typography.h6};
+    color: ${theme.palette.text.primary};
   `
 );
 
