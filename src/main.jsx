@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./main.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import ToastProvider from "./components/ToastProvider";
@@ -28,6 +27,7 @@ export const themeOptions = createTheme({
     },
     text: {
       primary: "#D95550",
+      secondary: "#0F3843",
     },
     error: {
       main: "#f44336",
@@ -48,7 +48,6 @@ export const themeOptions = createTheme({
       contrastText: "#fff",
     },
   },
-  spacing: 8,
   typography: {
     fontFamily: [
       "-apple-system",

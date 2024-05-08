@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 function ProfileSelect() {
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   // Array of colors for avatars
   const colors = [
@@ -43,6 +44,7 @@ function ProfileSelect() {
         setChildren(data);
       } catch (error) {
         toast.error("Whoops, failed to load children");
+        setError(true);
       }
       setLoading(false);
     };
@@ -53,40 +55,44 @@ function ProfileSelect() {
   return (
     <PageWrapper>
       <S.Logo src="/EarnNLearn.jpg" alt="Logo" />
-      <PageTitle>Profiles</PageTitle>
+      <PageTitle>Children</PageTitle>
       {loading ? (
         <ProfileSelectSkeleton />
+      ) : children.length === 0 ? (
+        <S.MessageContainer error={error}>
+          {`${
+            error
+              ? "We failed to get the children :("
+              : "No children registered."
+          }`}
+        </S.MessageContainer>
       ) : (
         <S.List>
-          {children.length === 0 ? (
-            <S.MessageContainer>No children registered.</S.MessageContainer>
-          ) : (
-            children.map((child, index) => (
-              <Link
-                key={child.id}
-                to={`/profile-balance/${child.id}`}
-                style={{ textDecoration: "none", width: "100%" }}
-              >
-                <S.ProfileItem>
-                  <S.ItemAvatar
-                    backgroundColor={colors[index % colors.length]}
-                  />
-                  <S.ItemText>
-                    {child.firstName} {child.lastName}
-                  </S.ItemText>
-                </S.ProfileItem>
-              </Link>
-            ))
-          )}
+          {children.map((child, index) => (
+            <Link
+              key={child.id}
+              to={`/profile-balance/${child.id}`}
+              style={{ textDecoration: "none", width: "100%" }}
+            >
+              <S.ListItem>
+                <S.ItemAvatar backgroundColor={colors[index % colors.length]} />
+                <S.ListItemText>
+                  {child.firstName} {child.lastName}
+                </S.ListItemText>
+              </S.ListItem>
+            </Link>
+          ))}
         </S.List>
       )}
-      <S.CreateChildButton
+
+      <S.Button
         disabled={loading}
         variant="contained"
         startIcon={<AddIcon />}
+        size="large"
       >
         Add Profile
-      </S.CreateChildButton>
+      </S.Button>
     </PageWrapper>
   );
 }

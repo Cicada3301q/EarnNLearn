@@ -1,10 +1,11 @@
 import {
   Avatar as MuiAvatar,
-  Box as MuiBox,
-  Button,
+  List as MuiList,
+  ListItem as MuiListItem,
+  ListItemText as MuiListItemText,
+  Button as MuiButton,
   css,
   styled,
-  Typography,
 } from "@mui/material";
 
 export const Logo = styled(MuiAvatar)(
@@ -15,31 +16,34 @@ export const Logo = styled(MuiAvatar)(
   `
 );
 
-export const List = styled("div")(
+export const List = styled(MuiList)(
   () => css`
-    margin-top: 24px;
-    padding: 24px;
+    margin-top: 16px;
     width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   `
 );
 
-export const MessageContainer = styled("div")(
-  ({ theme }) => css`
+export const MessageContainer = styled("p", {
+  shouldForwardProp: (prop) => prop !== "error",
+})(
+  ({ theme, error }) => css`
     text-align: center;
     font-size: ${theme.typography.h5};
     font-weight: 600;
-    color: ${theme.palette.primary.light};
+    color: ${error ? theme.palette.error.main : theme.palette.primary.light};
   `
 );
 
-export const ProfileItem = styled(MuiBox)(
+export const ListItem = styled(MuiListItem)(
   ({ theme }) => css`
     display: flex;
     align-items: center;
     padding: 16px;
-    margin-bottom: 8px;
     border: 1px solid ${theme.palette.grey[400]};
-    border-radius: 5px;
+    border-radius: 16px;
     height: 60px;
     gap: 16px;
 
@@ -50,23 +54,26 @@ export const ProfileItem = styled(MuiBox)(
   `
 );
 
+export const ListItemText = styled(MuiListItemText)(
+  ({ theme }) => css`
+    color: ${theme.palette.text.secondary};
+    span {
+      font-weight: 700;
+    }
+  `
+);
+
 export const ItemAvatar = styled(MuiAvatar, {
   shouldForwardProp: (prop) => prop !== "backgroundColor",
 })(
   ({ theme }) => css`
-    background-color: ${theme.palette.grey[600]};
+    background-color: ${theme.palette.primary.main};
   `
 );
 
-export const ItemText = styled(Typography)(
+export const Button = styled(MuiButton)(
   ({ theme }) => css`
-    font-size: ${theme.typography.h6};
-    color: ${theme.palette.text.primary};
-  `
-);
-
-export const CreateChildButton = styled(Button)(
-  () => css`
     margin-top: 16px;
+    background-color: ${theme.palette.secondary.main};
   `
 );
