@@ -54,7 +54,7 @@ function ProfileSelect() {
 
   return (
     <PageWrapper>
-      <S.Logo src="/EarnNLearn.jpg" alt="Logo" />
+      <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
       <PageTitle>Children</PageTitle>
       {loading ? (
         <ProfileSelectSkeleton />

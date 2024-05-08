@@ -8,7 +8,7 @@ import {
   styled,
 } from "@mui/material";
 
-export const Logo = styled(MuiAvatar)(
+export const Avatar = styled(MuiAvatar)(
   () => css`
     width: 100px;
     height: 100px;
