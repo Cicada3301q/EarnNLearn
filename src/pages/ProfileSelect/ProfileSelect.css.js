@@ -66,8 +66,8 @@ export const ListItemText = styled(MuiListItemText)(
 export const ItemAvatar = styled(MuiAvatar, {
   shouldForwardProp: (prop) => prop !== "backgroundColor",
 })(
-  ({ theme }) => css`
-    background-color: ${theme.palette.primary.main};
+  ({ backgroundColor }) => css`
+    background-color: ${backgroundColor};
   `
 );
 
