@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { Typography, TextField, Button, Stack, Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Avatar,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useNavigate } from "react-router-dom";
-import PageWrapper from "../../components/PageWrapper";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 
@@ -56,7 +62,14 @@ function ChoreCreation() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <PageWrapper>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          p: 3,
+        }}
+      >
         <Avatar
           src="/EarnNLearn.jpg"
           alt="Logo"
@@ -101,7 +114,7 @@ function ChoreCreation() {
             Cancel
           </Button>
         </Stack>
-      </PageWrapper>
+      </Box>
     </LocalizationProvider>
   );
 }
