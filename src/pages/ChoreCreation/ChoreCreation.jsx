@@ -57,7 +57,7 @@ function ChoreCreation() {
 
   const handleCancel = () => {
     // Navigate back to ProfileChores page
-    navigate("/profile-chores/1");
+    navigate(`/profile-chores/${childId}`);
   };
 
   return (
