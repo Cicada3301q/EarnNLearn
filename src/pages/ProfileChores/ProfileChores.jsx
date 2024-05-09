@@ -14,6 +14,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ProfileChores() {
   const { childId } = useParams();
@@ -54,7 +55,7 @@ function ProfileChores() {
             (chore) => chore.choreId !== choreId
           );
           setChores(updatedChores);
-          alert("Chore successfully deleted");
+          toast.success("Chore successfully deleted");
         } else {
           console.error(
             "Failed to delete chore, server responded with:",
@@ -62,12 +63,12 @@ function ProfileChores() {
           );
           response
             .text()
-            .then((text) => alert(`Failed to delete chore: ${text}`));
+            .then((text) => toast.error(`Failed to delete chore: ${text}`));
         }
       })
       .catch((error) => {
         console.error("Failed to delete chore", error);
-        alert("Failed to delete chore due to an error: " + error.message);
+        toast.error("Failed to delete chore due to an error: " + error.message);
       });
   };
 
@@ -92,7 +93,7 @@ function ProfileChores() {
             : chore
         );
         setChores(updatedChores);
-        alert("Chore status updated successfully");
+        toast.success("Chore status updated successfully");
       } else {
         console.error(
           "Failed to update chore, server responded with:",
@@ -100,11 +101,11 @@ function ProfileChores() {
         );
         response
           .text()
-          .then((text) => alert(`Failed to update chore: ${text}`));
+          .then((text) => toast.error(`Failed to update chore: ${text}`));
       }
     } catch (error) {
       console.error("Failed to update chore", error);
-      alert("Failed to update chore due to an error: " + error.message);
+      toast.error("Failed to update chore due to an error: " + error.message);
     }
   };
 

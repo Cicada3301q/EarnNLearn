@@ -10,9 +10,9 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 function ChoreCreation() {
   const { childId } = useParams();
@@ -23,13 +23,12 @@ function ChoreCreation() {
 
   const handleCreate = () => {
     if (choreName && choreValue && dueDate && childId) {
-      // Ensure all fields are filled
       const choreData = {
         title: choreName,
         amount: choreValue,
-        dueDate: moment(dueDate).toISOString(), // Format dueDate
-        status: "NOT_ACCEPTED", //default status for chores
-        childUserId: childId, // Include the childId in the chore data
+        dueDate: moment(dueDate).toISOString(),
+        status: "NOT_ACCEPTED",
+        childUserId: childId,
       };
 
       fetch("http://localhost:8080/api/chores/create", {
@@ -41,22 +40,20 @@ function ChoreCreation() {
         body: JSON.stringify(choreData),
       }).then((response) => {
         if (response.ok) {
-          // Handle success, maybe navigate back or show a success message
-          console.log(choreData);
+          toast.success("Chore created successfully!");
           navigate(`/profile-chores/${childId}`);
         } else {
-          // Handle errors, such as displaying a message to the user
-          console.error("Failed to create chore");
-          console.log(choreData);
+          response.text().then((text) => {
+            toast.error(`Failed to create chore: ${text}`);
+          });
         }
       });
     } else {
-      console.log("All fields are required.");
+      toast.error("All fields are required.");
     }
   };
 
   const handleCancel = () => {
-    // Navigate back to ProfileChores page
     navigate(`/profile-chores/${childId}`);
   };
 
@@ -73,7 +70,7 @@ function ChoreCreation() {
         <Avatar
           src="/EarnNLearn.jpg"
           alt="Logo"
-          sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
+          sx={{ width: 100, height: 100, marginBottom: 2 }}
         />
         <Typography variant="h4" component="h1" sx={{ color: "pink", mb: 4 }}>
           Chore Creation
@@ -90,7 +87,7 @@ function ChoreCreation() {
           variant="outlined"
           type="number"
           value={choreValue}
-          onChange={(e) => setChoreValue(parseInt(e.target.value, 10) || 0)} // Convert to integer, default to 0 if conversion fails
+          onChange={(e) => setChoreValue(parseInt(e.target.value, 10) || 0)}
           InputProps={{ inputProps: { min: 0 } }}
           sx={{ mb: 2, width: "40%" }}
         />
