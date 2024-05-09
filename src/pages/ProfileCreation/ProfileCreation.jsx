@@ -10,7 +10,6 @@ import {
   InputLabel,
   Stack,
 } from "@mui/material";
-// import "./LoginStyles.css";
 
 function ProfileCreation() {
   const navigate = useNavigate();

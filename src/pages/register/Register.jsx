@@ -11,8 +11,6 @@ import {
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
-// import './LoginStyles.css';
-// TODO Extract coin animation, and fix 30, 70% over population
 
 function Register() {
   const [email, setEmail] = useState("");

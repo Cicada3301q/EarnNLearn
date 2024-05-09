@@ -8,7 +8,6 @@ import {
   Avatar,
   InputLabel,
 } from "@mui/material";
-import "./LoginStyles.css";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
 import { getCookie } from "../../utils/auth.util";
