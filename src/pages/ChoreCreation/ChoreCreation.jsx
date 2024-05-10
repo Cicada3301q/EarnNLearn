@@ -11,8 +11,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 function ChoreCreation() {
   const { childId } = useParams();
@@ -26,7 +26,7 @@ function ChoreCreation() {
       const choreData = {
         title: choreName,
         amount: choreValue,
-        dueDate: moment(dueDate).toISOString(),
+        dueDate: dueDate.toISOString(),
         status: "NOT_ACCEPTED",
         childUserId: childId,
       };
@@ -87,7 +87,7 @@ function ChoreCreation() {
           variant="outlined"
           type="number"
           value={choreValue}
-          onChange={(e) => setChoreValue(parseInt(e.target.value, 10) || 0)}
+          onChange={(e) => setChoreValue(parseInt(e.target.value))}
           InputProps={{ inputProps: { min: 0 } }}
           sx={{ mb: 2, width: "40%" }}
         />
@@ -98,6 +98,7 @@ function ChoreCreation() {
           renderInput={(params) => (
             <TextField {...params} sx={{ mb: 2, width: "100%" }} />
           )}
+          minDate={dayjs()}
         />
         <Stack
           direction="row"
