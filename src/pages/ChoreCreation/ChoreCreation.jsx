@@ -10,9 +10,11 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import moment from "moment";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import { callApi } from "../../utils/api.util";
+import { METHOD } from "../../constants/enums";
 
 function ChoreCreation() {
   const { childId } = useParams();
@@ -20,44 +22,54 @@ function ChoreCreation() {
   const [choreName, setChoreName] = useState("");
   const [choreValue, setChoreValue] = useState(0);
   const [dueDate, setDueDate] = useState(null);
+  const [errors, setErrors] = useState({}); // Track validation errors
 
-  const handleCreate = () => {
-    if (choreName && choreValue && dueDate && childId) {
-      // Ensure all fields are filled
+  // Function to validate all fields
+  const validateFields = () => {
+    const newErrors = {};
+    if (!choreName.trim()) newErrors.choreName = "Chore name is required";
+    if (choreValue <= 0)
+      newErrors.choreValue = "Chore value must be greater than zero";
+    if (!dueDate) newErrors.dueDate = "Due date is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+  const handleCreate = async () => {
+    // Validate fields before proceeding
+    if (!validateFields()) {
+      toast.error("Please correct the errors before submitting.");
+      return;
+    }
+
+    if (childId) {
       const choreData = {
         title: choreName,
         amount: choreValue,
-        dueDate: moment(dueDate).toISOString(), // Format dueDate
-        status: "NOT_ACCEPTED", //default status for chores
-        childUserId: childId, // Include the childId in the chore data
+        dueDate: dueDate.toISOString(),
+        status: "NOT_ACCEPTED",
+        childUserId: childId,
       };
 
-      fetch("http://localhost:8080/api/chores/create", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(choreData),
-      }).then((response) => {
-        if (response.ok) {
-          // Handle success, maybe navigate back or show a success message
-          console.log(choreData);
-          navigate(`/profile-chores/${childId}`);
-        } else {
-          // Handle errors, such as displaying a message to the user
-          console.error("Failed to create chore");
-          console.log(choreData);
-        }
-      });
-    } else {
-      console.log("All fields are required.");
+      const response = await callApi(
+        "/api/chores/create",
+        METHOD.POST,
+        choreData
+      );
+
+      if (response && response.ok) {
+        toast.success("Chore created successfully!");
+        navigate(`/profile-chores/${childId}`);
+      } else {
+        const text = await response.text();
+        toast.error(`Failed to create chore: ${text}`);
+      }
     }
   };
 
   const handleCancel = () => {
-    // Navigate back to ProfileChores page
-    navigate("/profile-chores/1");
+    navigate(`/profile-chores/${childId}`);
   };
 
   return (
@@ -73,7 +85,7 @@ function ChoreCreation() {
         <Avatar
           src="/EarnNLearn.jpg"
           alt="Logo"
-          sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
+          sx={{ width: 100, height: 100, marginBottom: 2 }}
         />
         <Typography variant="h4" component="h1" sx={{ color: "pink", mb: 4 }}>
           Chore Creation
@@ -84,15 +96,19 @@ function ChoreCreation() {
           value={choreName}
           onChange={(e) => setChoreName(e.target.value)}
           sx={{ mb: 2, width: "40%" }}
+          error={!!errors.choreName}
+          helperText={errors.choreName}
         />
         <TextField
           label="Chore Value"
           variant="outlined"
           type="number"
           value={choreValue}
-          onChange={(e) => setChoreValue(parseInt(e.target.value, 10) || 0)} // Convert to integer, default to 0 if conversion fails
+          onChange={(e) => setChoreValue(parseInt(e.target.value))}
           InputProps={{ inputProps: { min: 0 } }}
           sx={{ mb: 2, width: "40%" }}
+          error={!!errors.choreValue}
+          helperText={errors.choreValue}
         />
         <DatePicker
           label="Due Date"
@@ -101,6 +117,9 @@ function ChoreCreation() {
           renderInput={(params) => (
             <TextField {...params} sx={{ mb: 2, width: "100%" }} />
           )}
+          minDate={dayjs()}
+          error={!!errors.dueDate}
+          helperText={errors.dueDate}
         />
         <Stack
           direction="row"
