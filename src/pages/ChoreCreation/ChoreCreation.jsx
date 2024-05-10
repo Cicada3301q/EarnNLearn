@@ -22,9 +22,28 @@ function ChoreCreation() {
   const [choreName, setChoreName] = useState("");
   const [choreValue, setChoreValue] = useState(0);
   const [dueDate, setDueDate] = useState(null);
+  const [errors, setErrors] = useState({}); // Track validation errors
+
+  // Function to validate all fields
+  const validateFields = () => {
+    const newErrors = {};
+    if (!choreName.trim()) newErrors.choreName = "Chore name is required";
+    if (choreValue <= 0)
+      newErrors.choreValue = "Chore value must be greater than zero";
+    if (!dueDate) newErrors.dueDate = "Due date is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
 
   const handleCreate = async () => {
-    if (choreName && choreValue && dueDate && childId) {
+    // Validate fields before proceeding
+    if (!validateFields()) {
+      toast.error("Please correct the errors before submitting.");
+      return;
+    }
+
+    if (childId) {
       const choreData = {
         title: choreName,
         amount: choreValue,
@@ -46,8 +65,6 @@ function ChoreCreation() {
         const text = await response.text();
         toast.error(`Failed to create chore: ${text}`);
       }
-    } else {
-      toast.error("All fields are required.");
     }
   };
 
@@ -79,6 +96,8 @@ function ChoreCreation() {
           value={choreName}
           onChange={(e) => setChoreName(e.target.value)}
           sx={{ mb: 2, width: "40%" }}
+          error={!!errors.choreName}
+          helperText={errors.choreName}
         />
         <TextField
           label="Chore Value"
@@ -88,6 +107,8 @@ function ChoreCreation() {
           onChange={(e) => setChoreValue(parseInt(e.target.value))}
           InputProps={{ inputProps: { min: 0 } }}
           sx={{ mb: 2, width: "40%" }}
+          error={!!errors.choreValue}
+          helperText={errors.choreValue}
         />
         <DatePicker
           label="Due Date"
@@ -97,6 +118,8 @@ function ChoreCreation() {
             <TextField {...params} sx={{ mb: 2, width: "100%" }} />
           )}
           minDate={dayjs()}
+          error={!!errors.dueDate}
+          helperText={errors.dueDate}
         />
         <Stack
           direction="row"
