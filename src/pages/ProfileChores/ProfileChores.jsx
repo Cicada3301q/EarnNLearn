@@ -15,6 +15,8 @@ import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { callApi } from "../../utils/api.util";
+import { METHOD } from "../../constants/enums";
 
 function ProfileChores() {
   const { childId } = useParams();
@@ -29,60 +31,56 @@ function ProfileChores() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/chores/child/${childId}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setChores(data);
-        setLoading(false);
-      })
-      .catch((error) => {
+    const fetchChores = async () => {
+      setLoading(true);
+      try {
+        const response = await callApi(
+          `/api/chores/child/${childId}`,
+          METHOD.GET
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setChores(data);
+        } else {
+          toast.error("Failed to fetch chores.");
+        }
+      } catch (error) {
         console.error("Failed to fetch chores", error);
-        setLoading(false);
-      });
+        toast.error("Failed to fetch chores due to an error: " + error.message);
+      }
+      setLoading(false);
+    };
+    fetchChores();
   }, [childId]);
 
-  const removeChore = (choreId) => {
-    fetch(`http://localhost:8080/api/chores/delete/${choreId}`, {
-      method: "DELETE",
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.ok) {
-          const updatedChores = chores.filter(
-            (chore) => chore.choreId !== choreId
-          );
-          setChores(updatedChores);
-          toast.success("Chore successfully deleted");
-        } else {
-          console.error(
-            "Failed to delete chore, server responded with:",
-            response.status
-          );
-          response
-            .text()
-            .then((text) => toast.error(`Failed to delete chore: ${text}`));
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to delete chore", error);
-        toast.error("Failed to delete chore due to an error: " + error.message);
-      });
+  const removeChore = async (choreId) => {
+    try {
+      const response = await callApi(
+        `/api/chores/delete/${choreId}`,
+        METHOD.DELETE
+      );
+      if (response.ok) {
+        const updatedChores = chores.filter(
+          (chore) => chore.choreId !== choreId
+        );
+        setChores(updatedChores);
+        toast.success("Chore successfully deleted");
+      } else {
+        toast.error("Failed to delete chore.");
+      }
+    } catch (error) {
+      console.error("Failed to delete chore", error);
+      toast.error("Failed to delete chore due to an error: " + error.message);
+    }
   };
 
   const updateChore = async (choreId, status) => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/chores/update/${choreId}`,
+      const response = await callApi(
+        `/api/chores/update/${choreId}`,
+        METHOD.PUT,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ status }),
+          status,
         }
       );
       if (response.ok) {
@@ -95,13 +93,7 @@ function ProfileChores() {
         setChores(updatedChores);
         toast.success("Chore status updated successfully");
       } else {
-        console.error(
-          "Failed to update chore, server responded with:",
-          response.status
-        );
-        response
-          .text()
-          .then((text) => toast.error(`Failed to update chore: ${text}`));
+        toast.error("Failed to update chore.");
       }
     } catch (error) {
       console.error("Failed to update chore", error);

@@ -13,6 +13,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import { callApi } from "../../utils/api.util";
+import { METHOD } from "../../constants/enums";
 
 function ChoreCreation() {
   const { childId } = useParams();
@@ -21,7 +23,7 @@ function ChoreCreation() {
   const [choreValue, setChoreValue] = useState(0);
   const [dueDate, setDueDate] = useState(null);
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (choreName && choreValue && dueDate && childId) {
       const choreData = {
         title: choreName,
@@ -31,23 +33,19 @@ function ChoreCreation() {
         childUserId: childId,
       };
 
-      fetch("http://localhost:8080/api/chores/create", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(choreData),
-      }).then((response) => {
-        if (response.ok) {
-          toast.success("Chore created successfully!");
-          navigate(`/profile-chores/${childId}`);
-        } else {
-          response.text().then((text) => {
-            toast.error(`Failed to create chore: ${text}`);
-          });
-        }
-      });
+      const response = await callApi(
+        "/api/chores/create",
+        METHOD.POST,
+        choreData
+      );
+
+      if (response && response.ok) {
+        toast.success("Chore created successfully!");
+        navigate(`/profile-chores/${childId}`);
+      } else {
+        const text = await response.text();
+        toast.error(`Failed to create chore: ${text}`);
+      }
     } else {
       toast.error("All fields are required.");
     }
