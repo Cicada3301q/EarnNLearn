@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 
 function CircularProgressBar(props) {
   const { size, thickness, value, maxValue } = props;
-  const normalise = (value) => ((value - 0) * 100) / (maxValue - 0);
+  const [animatedValue, setAnimatedValue] = useState(0);
+
+  const normalise = (value) => (value * 100) / maxValue;
+
+  useEffect(() => {
+    const animate = () => {
+      if (animatedValue < normalise(value)) {
+        setAnimatedValue(animatedValue + 1);
+      }
+    };
+
+    let timer = setInterval(() => {
+      animate();
+    }, 10);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [animatedValue]);
 
   return (
     <Box
@@ -23,7 +41,7 @@ function CircularProgressBar(props) {
       />
       <CircularProgress
         variant="determinate"
-        value={normalise(value)}
+        value={animatedValue}
         size={size}
         thickness={thickness}
         sx={{
