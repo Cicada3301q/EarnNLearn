@@ -1,18 +1,11 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Toolbar, Button, IconButton, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
+import * as S from "./HeaderBanner.css";
+import { toast } from "react-toastify";
 
 function HeaderBanner() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -36,35 +29,18 @@ function HeaderBanner() {
       await callApi("/api/user/logout", METHOD.POST);
       navigate("/login");
     } catch (error) {
-      // we should be adding a toast message or something like that telling the user we failed to log them out
-      alert("We failed to log you out :(");
+      toast.error("Sorry, we failed to log you out");
     }
   };
 
   return (
-    <AppBar position="static">
+    <S.Appbar position="static">
       <Toolbar>
-        <Avatar
-          edge="start"
-          src="/EarnNLearn.jpg"
-          alt="Logo"
-          sx={{
-            width: 50,
-            height: 50,
-            marginBottom: 2,
-            marginTop: 2,
-            marginRight: 2,
-          }}
-        />
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          EarnNLearn
-        </Typography>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          onClick={handleMenuClick}
-        >
+        <S.Link to={"/profiles"}>
+          <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
+          <S.LogoText>EarnNLearn</S.LogoText>
+        </S.Link>
+        <IconButton color="inherit" onClick={handleMenuClick}>
           <MenuIcon />
         </IconButton>
 
@@ -73,12 +49,12 @@ function HeaderBanner() {
         </Button>
         <Menu
           id="menu-appbar"
+          keepMounted
           anchorEl={anchorEl}
           anchorOrigin={{
-            vertical: "top",
+            vertical: "bottom",
             horizontal: "right",
           }}
-          keepMounted
           transformOrigin={{
             vertical: "top",
             horizontal: "right",
@@ -91,10 +67,9 @@ function HeaderBanner() {
           <MenuItem onClick={() => handleNavigate("/contact")}>
             Contact
           </MenuItem>
-          {/* Add more MenuItem components as needed for additional pages */}
         </Menu>
       </Toolbar>
-    </AppBar>
+    </S.Appbar>
   );
 }
 
