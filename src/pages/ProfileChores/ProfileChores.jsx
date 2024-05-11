@@ -17,6 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
+import PageWrapper from "../../components/PageWrapper";
 
 function ProfileChores() {
   const { childId } = useParams();
@@ -115,77 +116,72 @@ function ProfileChores() {
   };
 
   return (
-    <div>
-      <Box sx={{ margin: 2 }}>
-        <CircularProgressBar
-          size={150}
-          thickness={4}
-          value={profile.balance}
-          maxValue={profile.lifetimeEarnings}
-          name={profile.name}
-        />
-        <ProfileSwitch />
-        <Box sx={{ margin: 2, paddingBottom: 10 }}>
-          {chores.map((chore) => (
-            <Paper
-              key={chore.choreId}
-              sx={{
-                display: "flex",
-                width: "60%",
-                mx: "auto",
-                justifyContent: "space-between",
-                marginY: 1,
-                padding: 2,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{ bgcolor: "grey.300", padding: 1, marginRight: 2 }}>
-                  <Typography sx={{ color: "pink" }}>
-                    ${chore.amount}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body1">{chore.title}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Due: {chore.dueDate.split("T")[0]}
-                  </Typography>
-                </Box>
+    <PageWrapper>
+      <CircularProgressBar
+        size={150}
+        thickness={4}
+        value={profile.balance}
+        maxValue={profile.lifetimeEarnings}
+        name={profile.name}
+        isChore={true}
+      />
+      <ProfileSwitch />
+      <Box sx={{ paddingBottom: 10 }}>
+        {chores.map((chore) => (
+          <Paper
+            key={chore.choreId}
+            sx={{
+              display: "flex",
+              width: "100%",
+              mx: "auto",
+              justifyContent: "space-between",
+              marginY: 1,
+              padding: 2,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ bgcolor: "grey.300", padding: 1, marginRight: 2 }}>
+                <Typography sx={{ color: "pink" }}>${chore.amount}</Typography>
               </Box>
               <Box>
-                <Select
-                  value={chore.status}
-                  onChange={(event) => handleStatusChange(event, chore.choreId)}
-                  size="small"
-                  sx={{ ml: 1 }}
-                >
-                  <MenuItem value="COMPLETED">Completed</MenuItem>
-                  <MenuItem value="IN_PROGRESS">In Progress</MenuItem>
-                  <MenuItem value="AWAITING_APPROVAL">
-                    Awaiting Approval
-                  </MenuItem>
-                  <MenuItem value="NOT_ACCEPTED">Not Accepted</MenuItem>
-                </Select>
-                <IconButton
-                  onClick={() => removeChore(chore.choreId)}
-                  color="error"
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
+                <Typography variant="body1">{chore.title}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Due: {chore.dueDate.split("T")[0]}
+                </Typography>
               </Box>
-            </Paper>
-          ))}
-          <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
-            <Fab
-              color="primary"
-              aria-label="add"
-              onClick={navigateToChoreCreation}
-            >
-              <AddIcon />
-            </Fab>
-          </Box>
+            </Box>
+            <Box>
+              <Select
+                value={chore.status}
+                onChange={(event) => handleStatusChange(event, chore.choreId)}
+                size="small"
+                sx={{ ml: 1 }}
+              >
+                <MenuItem value="COMPLETED">Completed</MenuItem>
+                <MenuItem value="IN_PROGRESS">In Progress</MenuItem>
+                <MenuItem value="AWAITING_APPROVAL">Awaiting Approval</MenuItem>
+                <MenuItem value="NOT_ACCEPTED">Not Accepted</MenuItem>
+              </Select>
+              <IconButton
+                onClick={() => removeChore(chore.choreId)}
+                color="error"
+              >
+                <DeleteOutlineIcon />
+              </IconButton>
+            </Box>
+          </Paper>
+        ))}
+        <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={navigateToChoreCreation}
+          >
+            <AddIcon />
+          </Fab>
         </Box>
       </Box>
-    </div>
+    </PageWrapper>
   );
 }
 
