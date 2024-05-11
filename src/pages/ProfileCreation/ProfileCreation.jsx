@@ -13,22 +13,44 @@ import {
 
 function ProfileCreation() {
   const navigate = useNavigate();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({}); // State to track validation errors
+
+  // Function to validate all input fields
+  const validateFields = () => {
+    const newErrors = {};
+    if (!firstName.trim()) newErrors.firstName = "First name is required";
+    if (!lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!email.trim()) newErrors.email = "Email is required";
+    if (!password) newErrors.password = "Password is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
 
   const handleCreate = () => {
-    // Validation and creation logic goes here
+    // Validate input fields before processing the creation
+    if (!validateFields()) {
+      return;
+    }
+
+    // Proceed with user creation if validation passes
     console.log({
+      firstName,
+      lastName,
       email,
       password,
     });
     // Navigate back to ProfileChores page after creation
-    navigate("/profile-chores/1");
+    navigate("/profiles");
   };
 
   const handleCancel = () => {
     // Navigate back to ProfileChores page
-    navigate("/profile-chores/1");
+    navigate("/profiles");
   };
 
   return (
@@ -44,7 +66,7 @@ function ProfileCreation() {
         <Avatar
           src="/EarnNLearn.jpg"
           alt="Logo"
-          sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
+          sx={{ width: 100, height: 100, marginBottom: 2 }}
         />
         <Typography
           component="h1"
@@ -54,17 +76,51 @@ function ProfileCreation() {
           Add Child
         </Typography>
         <Box component="form" noValidate className="form">
-          <InputLabel htmlFor="username">Username</InputLabel>
+          <InputLabel htmlFor="firstName">First Name</InputLabel>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="username"
-            name="username"
-            autoComplete="username"
+            id="firstName"
+            name="firstName"
+            autoComplete="given-name"
             autoFocus
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             className="textField"
-            placeholder="Enter childs name"
+            placeholder="Enter child's first name"
+            error={!!errors.firstName}
+            helperText={errors.firstName}
+          />
+          <InputLabel htmlFor="lastName">Last Name</InputLabel>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="lastName"
+            name="lastName"
+            autoComplete="family-name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className="textField"
+            placeholder="Enter child's last name"
+            error={!!errors.lastName}
+            helperText={errors.lastName}
+          />
+          <InputLabel htmlFor="email">Email</InputLabel>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            name="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="textField"
+            placeholder="Enter child's email"
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <InputLabel htmlFor="password">Password</InputLabel>
           <TextField
@@ -76,8 +132,12 @@ function ProfileCreation() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="textField"
             placeholder="New password for child"
+            error={!!errors.password}
+            helperText={errors.password}
           />
           <Stack
             direction="row"
