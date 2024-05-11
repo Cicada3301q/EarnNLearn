@@ -17,40 +17,6 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  useEffect(() => {
-    const container = document.querySelector(".coinsContainer");
-    const createCoin = () => {
-      const coin = document.createElement("div");
-      coin.classList.add("coin");
-
-      // Calculate a random position, avoiding the middle 40% of the page
-      //need to change this so it randomly distributes the coins that fall within the middle 40% of the page/
-      const position = Math.random() * 100;
-      if (position > 30 && position < 70) {
-        //math.random between 0-30 and 70-100
-        coin.style.left =
-          position < 50
-            ? `${math.random() * 30}vw`
-            : `${math.floor(70 + math.random() * 30)}vw`;
-      } else {
-        coin.style.left = position + "vw";
-      }
-
-      coin.style.animationDuration = Math.random() * 3 + 2 + "s"; // Randomize duration
-      container.appendChild(coin);
-
-      // Remove coin after animation ends
-      coin.addEventListener("animationend", () => {
-        coin.remove();
-      });
-    };
-
-    // Create a new coin every 300 milliseconds
-    const interval = setInterval(createCoin, 200);
-
-    return () => clearInterval(interval); // Clean up interval on component unmount
-  }, []);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
