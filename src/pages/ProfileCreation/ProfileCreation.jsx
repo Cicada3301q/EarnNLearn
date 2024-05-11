@@ -10,6 +10,9 @@ import {
   InputLabel,
   Stack,
 } from "@mui/material";
+import { toast } from "react-toastify";
+import { callApi } from "../../utils/api.util";
+import { METHOD } from "../../constants/enums";
 
 function ProfileCreation() {
   const navigate = useNavigate();
@@ -17,7 +20,7 @@ function ProfileCreation() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({}); // State to track validation errors
+  const [errors, setErrors] = useState({});
 
   // Function to validate all input fields
   const validateFields = () => {
@@ -31,21 +34,38 @@ function ProfileCreation() {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     // Validate input fields before processing the creation
     if (!validateFields()) {
       return;
     }
 
-    // Proceed with user creation if validation passes
-    console.log({
+    // Prepare the request body
+    const requestBody = {
       firstName,
       lastName,
       email,
       password,
-    });
-    // Navigate back to ProfileChores page after creation
-    navigate("/profiles");
+    };
+
+    try {
+      // Call the backend API to register a child
+      const response = await callApi(
+        "/api/user/register-child",
+        METHOD.POST,
+        requestBody
+      );
+      if (response.ok) {
+        toast.success("Child registered successfully!");
+        navigate("/profiles");
+      } else {
+        const errorMsg = await response.text();
+        toast.error(`Failed to register child: ${errorMsg}`);
+      }
+    } catch (error) {
+      console.error("Failed to register child:", error);
+      toast.error("Failed to register child due to an error: " + error.message);
+    }
   };
 
   const handleCancel = () => {
