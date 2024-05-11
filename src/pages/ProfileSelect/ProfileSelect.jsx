@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { callApi } from "../../utils/api.util";
@@ -8,13 +8,17 @@ import { PageTitle } from "../../components/Typography";
 import ProfileSelectSkeleton from "./ProfileSelect.skeleton";
 import * as S from "./ProfileSelect.css";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContextProvider";
 
 function ProfileSelect() {
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const navigate = useNavigate(); // Use the useNavigate hook
+  const { user, isParent } = useContext(AuthContext);
 
+  console.log(user);
+  console.log(isParent);
   // Array of colors for avatars
   const colors = [
     "#f44336",

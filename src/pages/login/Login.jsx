@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -9,9 +9,10 @@ import {
   InputLabel,
 } from "@mui/material";
 import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
+import { METHOD, ROLE } from "../../constants/enums";
 import { getCookie } from "../../utils/auth.util";
 import PageWrapper from "../../components/PageWrapper";
+import { toast } from "react-toastify";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -41,12 +42,15 @@ function Login() {
       );
 
       const data = await response.json();
+      const user = data.returnedUser;
 
-      if (response.ok) {
+      if (user.role === ROLE.PARENT) {
         navigate("/profiles");
+      } else {
+        navigate(`/profile-chores/${user.id}`);
       }
     } catch (error) {
-      alert("failed to login, sorry", error.message);
+      toast.error("Email or Password is incorrect");
     }
   };
 
@@ -106,15 +110,6 @@ function Login() {
           onClick={(e) => handleSubmit(e)}
         >
           Sign In
-        </Button>
-        {/*route to the Profiles page for testing */}
-        <Button
-          component={Link}
-          to="/profiles"
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Go to Profiles
         </Button>
       </Box>
     </PageWrapper>
