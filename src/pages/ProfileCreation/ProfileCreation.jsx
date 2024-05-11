@@ -60,11 +60,11 @@ function ProfileCreation() {
         navigate("/profiles");
       } else {
         const errorMsg = await response.text();
-        toast.error(`Failed to register child: ${errorMsg}`);
+        toast.error(`Oopsie, Failed to register child`);
       }
     } catch (error) {
       console.error("Failed to register child:", error);
-      toast.error("Failed to register child due to an error: " + error.message);
+      toast.error("Oopsie, Failed to register child");
     }
   };
 
