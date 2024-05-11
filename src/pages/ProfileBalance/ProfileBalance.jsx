@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Container, Divider, Button } from "@mui/material";
+import { Box, Typography, Divider, Button } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ProfileSwitch from "../../components/ProfileSwitch";
