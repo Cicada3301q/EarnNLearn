@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { callApi } from "../../utils/api.util";
 import { METHOD } from "../../constants/enums";
@@ -13,6 +13,7 @@ function ProfileSelect() {
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const navigate = useNavigate(); // Use the useNavigate hook
 
   // Array of colors for avatars
   const colors = [
@@ -40,8 +41,12 @@ function ProfileSelect() {
     const fetchChildren = async () => {
       try {
         const response = await callApi("/api/user/children", METHOD.GET);
-        const data = await response.json();
-        setChildren(data);
+        if (response.ok) {
+          const data = await response.json();
+          setChildren(data);
+        } else {
+          throw new Error("Failed to fetch children");
+        }
       } catch (error) {
         toast.error("Whoops, failed to load children");
         setError(true);
@@ -52,6 +57,11 @@ function ProfileSelect() {
     fetchChildren();
   }, []);
 
+  // Function to handle navigation to profile creation
+  const handleAddProfile = () => {
+    navigate("/add-profile"); // Navigate to profile-creation when called
+  };
+
   return (
     <PageWrapper>
       <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
@@ -60,11 +70,9 @@ function ProfileSelect() {
         <ProfileSelectSkeleton />
       ) : children.length === 0 ? (
         <S.MessageContainer error={error}>
-          {`${
-            error
-              ? "We failed to get the children :("
-              : "No children registered."
-          }`}
+          {error
+            ? "We failed to get the children :("
+            : "No children registered."}
         </S.MessageContainer>
       ) : (
         <S.List>
@@ -90,6 +98,7 @@ function ProfileSelect() {
         variant="contained"
         startIcon={<AddIcon />}
         size="large"
+        onClick={handleAddProfile} // Attach the handleAddProfile function here
       >
         Add Profile
       </S.Button>
