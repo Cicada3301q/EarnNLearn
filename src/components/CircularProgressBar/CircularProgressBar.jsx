@@ -18,20 +18,27 @@ function CircularProgressBar({
   };
 
   useEffect(() => {
+    const targetValue = normalise(value);
     const animate = () => {
-      if (animatedValue < normalise(value)) {
-        setAnimatedValue(animatedValue + 1);
+      // Determine the difference and adjust the speed accordingly
+      const difference = Math.abs(targetValue - animatedValue);
+      const increment = Math.max(1, difference / 7);
+
+      if (animatedValue < targetValue) {
+        setAnimatedValue((prevValue) =>
+          Math.min(prevValue + increment, targetValue)
+        );
       }
     };
 
     let timer = setInterval(() => {
       animate();
-    }, 10);
+    }, 100);
 
     return () => {
       clearInterval(timer);
     };
-  }, [animatedValue]);
+  }, [animatedValue, value, maxValue]); // Added 'value' and 'maxValue' to dependencies
 
   return (
     <S.ProgressBarContainer>
@@ -51,7 +58,7 @@ function CircularProgressBar({
         <S.NameText>{name}</S.NameText>
         <S.ValueText>{isChore ? value : convertToDollar(value)}</S.ValueText>
         <S.PercentText>
-          {Math.round(normalise(value))}% {isChore ? "complete" : "saved"}
+          {Math.round(animatedValue)}% {isChore ? "complete" : "saved"}
         </S.PercentText>
       </S.TextContainer>
     </S.ProgressBarContainer>
