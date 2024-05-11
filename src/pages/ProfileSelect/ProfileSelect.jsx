@@ -17,8 +17,6 @@ function ProfileSelect() {
   const navigate = useNavigate(); // Use the useNavigate hook
   const { user, isParent } = useContext(AuthContext);
 
-  console.log(user);
-  console.log(isParent);
   // Array of colors for avatars
   const colors = [
     "#f44336",

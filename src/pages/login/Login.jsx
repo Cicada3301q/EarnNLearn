@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -22,8 +22,19 @@ function Login() {
   useEffect(() => {
     const isAuth = getCookie("jwt");
 
+    const getUser = async () => {
+      const response = await callApi("/api/user", METHOD.GET);
+      const data = await response.json();
+      const user = data;
+      if (user.role === ROLE.PARENT) {
+        navigate("/profiles");
+      } else {
+        navigate(`/profile-chores/${user.id}`);
+      }
+    };
+
     if (isAuth) {
-      navigate("/profiles");
+      getUser();
     }
   }, []);
 

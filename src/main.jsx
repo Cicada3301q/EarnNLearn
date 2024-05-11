@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import ToastProvider from "./components/ToastProvider";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { CssBaseline } from "@mui/material/";
+import { AuthContextProvider } from "./context/AuthContextProvider";
 
 export const themeOptions = createTheme({
   palette: {
@@ -72,7 +73,9 @@ root.render(
       <CssBaseline />
       <BrowserRouter>
         <ToastProvider>
-          <App />
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
         </ToastProvider>
       </BrowserRouter>
     </ThemeProvider>

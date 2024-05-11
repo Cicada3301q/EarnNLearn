@@ -11,7 +11,6 @@ import ProfileCreation from "./pages/ProfileCreation";
 import BabySitter from "./pages/BabySitter";
 import HeaderBanner from "./components/HeaderBanner";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import { AuthContextProvider } from "./context/AuthContextProvider";
 
 const App = () => {
   const location = useLocation();
@@ -25,13 +24,7 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          element={
-            <AuthContextProvider>
-              <ProtectedRoutes />
-            </AuthContextProvider>
-          }
-        >
+        <Route element={<ProtectedRoutes />}>
           <Route path="/profiles" element={<ProfileSelect />} />
           <Route path="/add-profile" element={<ProfileCreation />} />
           <Route path="/profile-balance/:id" element={<ProfileBalance />} />

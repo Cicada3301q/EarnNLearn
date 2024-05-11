@@ -36,7 +36,7 @@ function HeaderBanner() {
   return (
     <S.Appbar position="static">
       <Toolbar>
-        <S.Link to={"/profiles"}>
+        <S.Link to={"/"}>
           <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
           <S.LogoText>EarnNLearn</S.LogoText>
         </S.Link>
