@@ -1,23 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
 import { PageTitle } from "../../components/Typography";
 import ProfileSelectSkeleton from "./ProfileSelect.skeleton";
 import * as S from "./ProfileSelect.css";
-import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContextProvider";
+import { useQuery } from "../../hooks/useQuery";
 
 function ProfileSelect() {
-  const [children, setChildren] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate();
   const { user, isParent } = useContext(AuthContext);
+  const { data: children, loading, error } = useQuery("user/children/");
 
-  // Array of colors for avatars
   const colors = [
     "#f44336",
     "#e91e63",
@@ -39,46 +34,27 @@ function ProfileSelect() {
     "#607d8b",
   ];
 
-  useEffect(() => {
-    const fetchChildren = async () => {
-      try {
-        const response = await callApi("/api/user/children", METHOD.GET);
-        if (response.ok) {
-          const data = await response.json();
-          setChildren(data);
-        } else {
-          throw new Error("Failed to fetch children");
-        }
-      } catch (error) {
-        toast.error("Whoops, failed to load children");
-        setError(true);
-      }
-      setLoading(false);
-    };
-
-    fetchChildren();
-  }, []);
-
-  // Function to handle navigation to profile creation
   const handleAddProfile = () => {
-    navigate("/add-profile"); // Navigate to profile-creation when called
+    navigate("/add-profile");
   };
 
   return (
     <PageWrapper>
       <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
       <PageTitle>Children</PageTitle>
-      {loading ? (
-        <ProfileSelectSkeleton />
-      ) : children.length === 0 ? (
+      {loading && <ProfileSelectSkeleton />}
+      {error && (
         <S.MessageContainer error={error}>
-          {error
-            ? "We failed to get the children :("
-            : "No children registered."}
+          We failed to get the children :(
+        </S.MessageContainer>
+      )}
+      {children?.length === 0 ? (
+        <S.MessageContainer error={false}>
+          No children registered.
         </S.MessageContainer>
       ) : (
         <S.List>
-          {children.map((child, index) => (
+          {children?.map((child, index) => (
             <Link
               key={child.id}
               to={`/profile-chores/${child.id}`}
@@ -94,13 +70,12 @@ function ProfileSelect() {
           ))}
         </S.List>
       )}
-
       <S.Button
         disabled={loading}
         variant="contained"
         startIcon={<AddIcon />}
         size="large"
-        onClick={handleAddProfile} // Attach the handleAddProfile function here
+        onClick={handleAddProfile}
       >
         Add Profile
       </S.Button>
