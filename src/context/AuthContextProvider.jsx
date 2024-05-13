@@ -10,17 +10,16 @@ export const AuthContext = createContext({
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  // add user object to applications memory on reload
   useEffect(() => {
     const user = getCookie("user");
     if (user) {
-      setUser(user);
+      setUser(JSON.parse(user));
     }
-  }, [user]);
-
-  const isParent = user?.role === ROLE.PARENT;
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isParent }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );
