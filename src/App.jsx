@@ -11,6 +11,7 @@ import ProfileCreation from "./pages/ProfileCreation";
 import BabySitter from "./pages/BabySitter";
 import HeaderBanner from "./components/HeaderBanner";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import ParentRoutes from "./components/ParentRoutes/ParentRoutes";
 
 const App = () => {
   const location = useLocation();
@@ -25,8 +26,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoutes />}>
-          <Route path="/profiles" element={<ProfileSelect />} />
-          <Route path="/add-profile" element={<ProfileCreation />} />
+          <Route element={<ParentRoutes />}>
+            <Route path="/profiles" element={<ProfileSelect />} />
+            <Route path="/add-profile" element={<ProfileCreation />} />
+          </Route>
           <Route path="/profile-balance/:id" element={<ProfileBalance />} />
           <Route path="/profile-chores/:childId" element={<ProfileChores />} />
           <Route path="/create-chore/:childId" element={<ChoreCreation />} />

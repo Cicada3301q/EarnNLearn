@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -18,7 +18,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { addUser } = useAuth();
+  const { addUser, isAuth } = useAuth();
   const { mutate: login, isError } = useMutation();
 
   const handleLogin = (event) => {
@@ -49,6 +49,10 @@ function Login() {
       },
     });
   };
+
+  if (isAuth) {
+    return <Navigate to="/profiles" />;
+  }
 
   return (
     <PageWrapper>

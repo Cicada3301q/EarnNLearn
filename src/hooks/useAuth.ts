@@ -32,5 +32,7 @@ export const useAuth = () => {
     }
   };
 
-  return { user, addUser, removeUser, getUserFromStorage };
+  const isAuth = !!getUserFromStorage();
+
+  return { user, isAuth, addUser, removeUser, getUserFromStorage };
 };
