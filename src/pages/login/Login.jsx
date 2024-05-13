@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -8,61 +8,42 @@ import {
   Avatar,
   InputLabel,
 } from "@mui/material";
-import { callApi } from "../../utils/api.util";
 import { METHOD, ROLE } from "../../constants/enums";
-import { getCookie } from "../../utils/auth.util";
 import PageWrapper from "../../components/PageWrapper";
 import { toast } from "react-toastify";
+import { useMutation } from "../../hooks/useMutation";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { mutate: login, isError } = useMutation();
 
-  useEffect(() => {
-    const isAuth = getCookie("jwt");
-
-    const getUser = async () => {
-      const response = await callApi("/api/user", METHOD.GET);
-      const data = await response.json();
-      const user = data;
-      if (user.role === ROLE.PARENT) {
-        navigate("/profiles");
-      } else {
-        navigate(`/profile-chores/${user.id}`);
-      }
-    };
-
-    if (isAuth) {
-      getUser();
-    }
-  }, []);
-
-  const handleSubmit = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
     const requestBody = {
       email,
       password,
     };
 
-    try {
-      const response = await callApi(
-        "/api/user/login",
-        METHOD.POST,
-        requestBody
-      );
-
-      const data = await response.json();
-      const user = data.returnedUser;
-
-      if (user.role === ROLE.PARENT) {
-        navigate("/profiles");
-      } else {
-        navigate(`/profile-chores/${user.id}`);
-      }
-    } catch (error) {
-      toast.error("Email or Password is incorrect");
-    }
+    login({
+      route: "user/login/",
+      method: METHOD.POST,
+      body: requestBody,
+      options: {
+        onSuccess: (response) => {
+          const user = response.returnedUser;
+          if (user.role === ROLE.PARENT) {
+            navigate("/profiles");
+          } else {
+            navigate(`/profile-chores/${user.id}`);
+          }
+        },
+        onError: (_) => {
+          toast.error("Invalid credentials");
+        },
+      },
+    });
   };
 
   return (
@@ -92,6 +73,7 @@ function Login() {
           className="textField"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={isError}
         />
         <InputLabel htmlFor="password">Password</InputLabel>
         <TextField
@@ -105,6 +87,7 @@ function Login() {
           className="textField"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={isError}
         />
         <Typography className="accountPrompt">
           Don't have an account?{" "}
@@ -118,7 +101,7 @@ function Login() {
           variant="contained"
           className="signInButton"
           sx={{ mt: 3, mb: 2, backgroundColor: "#0D99FF" }}
-          onClick={(e) => handleSubmit(e)}
+          onClick={(e) => handleLogin(e)}
         >
           Sign In
         </Button>
