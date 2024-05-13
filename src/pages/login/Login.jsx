@@ -12,11 +12,13 @@ import { METHOD, ROLE } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
 import { toast } from "react-toastify";
 import { useMutation } from "../../hooks/useMutation";
+import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { addUser } = useAuth();
   const { mutate: login, isError } = useMutation();
 
   const handleLogin = (event) => {
@@ -33,6 +35,8 @@ function Login() {
       options: {
         onSuccess: (response) => {
           const user = response.returnedUser;
+          addUser(user);
+
           if (user.role === ROLE.PARENT) {
             navigate("/profiles");
           } else {

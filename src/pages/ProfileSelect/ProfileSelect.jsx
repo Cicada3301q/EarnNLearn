@@ -5,12 +5,10 @@ import PageWrapper from "../../components/PageWrapper";
 import { PageTitle } from "../../components/Typography";
 import ProfileSelectSkeleton from "./ProfileSelect.skeleton";
 import * as S from "./ProfileSelect.css";
-import { AuthContext } from "../../context/AuthContextProvider";
 import { useQuery } from "../../hooks/useQuery";
 
 function ProfileSelect() {
   const navigate = useNavigate();
-  const { user, isParent } = useContext(AuthContext);
   const { data: children, loading, error } = useQuery("user/children/");
 
   const colors = [
