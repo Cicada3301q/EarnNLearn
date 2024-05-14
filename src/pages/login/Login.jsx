@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Avatar,
-  InputLabel,
-} from "@mui/material";
+import { TextField, Avatar, InputLabel } from "@mui/material";
 import { METHOD, ROLE } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
 import { toast } from "react-toastify";
 import { useMutation } from "../../hooks/useMutation";
 import { useAuth } from "../../hooks/useAuth";
+import * as S from "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -61,15 +55,9 @@ function Login() {
         alt="Logo"
         sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
       />
-      <Typography
-        component="h1"
-        variant="h5"
-        sx={{ marginBottom: 2, color: "hotpink" }}
-      >
-        EarnNLearn
-      </Typography>
-      <Box component="form" noValidate className="form">
-        <InputLabel htmlFor="email">Email</InputLabel>
+      <S.Title>EarnNLearn</S.Title>
+      <S.Form>
+        <InputLabel>Email</InputLabel>
         <TextField
           margin="normal"
           required
@@ -78,7 +66,6 @@ function Login() {
           name="email"
           autoComplete="email"
           autoFocus
-          className="textField"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           error={isError}
@@ -92,28 +79,26 @@ function Login() {
           type="password"
           id="password"
           autoComplete="current-password"
-          className="textField"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={isError}
+          helperText={isError && "Email or password is incorrect."}
         />
-        <Typography className="accountPrompt">
-          Don't have an account?{" "}
+        <S.RegisterText>
+          Don't have an account?
           <Link to="/register" className="linkText">
             Register.
           </Link>
-        </Typography>
-        <Button
+        </S.RegisterText>
+        <S.LoginButton
           type="submit"
           fullWidth
           variant="contained"
-          className="signInButton"
-          sx={{ mt: 3, mb: 2, backgroundColor: "#0D99FF" }}
           onClick={(e) => handleLogin(e)}
         >
           Sign In
-        </Button>
-      </Box>
+        </S.LoginButton>
+      </S.Form>
     </PageWrapper>
   );
 }
