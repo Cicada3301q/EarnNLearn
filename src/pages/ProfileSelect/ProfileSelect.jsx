@@ -9,7 +9,7 @@ import { useQuery } from "../../hooks/useQuery";
 
 function ProfileSelect() {
   const navigate = useNavigate();
-  const { data: children, loading, error } = useQuery("user/children/");
+  const { data: children, isLoading, isError } = useQuery("user/children/");
 
   const colors = [
     "#f44336",
@@ -36,12 +36,20 @@ function ProfileSelect() {
     navigate("/add-profile");
   };
 
+  const handleChildClick = (child) => {
+    navigate("/profile-chores/", {
+      state: {
+        child: child,
+      },
+    });
+  };
+
   return (
     <PageWrapper>
       <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
       <PageTitle>Children</PageTitle>
-      {loading && <ProfileSelectSkeleton />}
-      {error && (
+      {isLoading && <ProfileSelectSkeleton />}
+      {isError && (
         <S.MessageContainer error={error}>
           We failed to get the children :(
         </S.MessageContainer>
@@ -53,18 +61,12 @@ function ProfileSelect() {
       ) : (
         <S.List>
           {children?.map((child, index) => (
-            <Link
-              key={child.id}
-              to={`/profile-chores/${child.id}`}
-              style={{ textDecoration: "none", width: "100%" }}
-            >
-              <S.ListItem>
-                <S.ItemAvatar backgroundColor={colors[index % colors.length]} />
-                <S.ListItemText>
-                  {child.firstName} {child.lastName}
-                </S.ListItemText>
-              </S.ListItem>
-            </Link>
+            <S.ListItem onClick={() => handleChildClick(child)}>
+              <S.ItemAvatar backgroundColor={colors[index % colors.length]} />
+              <S.ListItemText>
+                {child.firstName} {child.lastName}
+              </S.ListItemText>
+            </S.ListItem>
           ))}
         </S.List>
       )}

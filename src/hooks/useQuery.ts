@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { METHOD } from "../constants/enums";
 
 export const useQuery = (route: string) => {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
 
   const getData = async () => {
@@ -22,10 +22,10 @@ export const useQuery = (route: string) => {
         setData(data);
       }
     } catch (error) {
-      setError(true);
+      setIsError(true);
       console.error(`FETCH ERROR: ${error}`);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -33,5 +33,5 @@ export const useQuery = (route: string) => {
     getData();
   }, []);
 
-  return { data, error, loading };
+  return { data, isError, isLoading };
 };
