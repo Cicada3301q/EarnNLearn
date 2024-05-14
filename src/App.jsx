@@ -31,7 +31,7 @@ const App = () => {
             <Route path="/add-profile" element={<ProfileCreation />} />
           </Route>
           <Route path="/profile-balance/:id" element={<ProfileBalance />} />
-          <Route path="/profile-chores/:childId" element={<ProfileChores />} />
+          <Route path="/profile-chores" element={<ProfileChores />} />
           <Route path="/create-chore/:childId" element={<ChoreCreation />} />
           <Route path="/redeem-request" element={<RedeemRequest />} />
           <Route path="/babysitter" element={<BabySitter />} />
