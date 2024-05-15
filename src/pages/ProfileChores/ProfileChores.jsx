@@ -7,6 +7,7 @@ import {
   Fab,
   Select,
   MenuItem,
+  Chip,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
@@ -15,11 +16,11 @@ import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
+import { CHORE_STATUS, METHOD } from "../../constants/enums";
 import { useQuery } from "../../hooks/useQuery";
 import PageWrapper from "../../components/PageWrapper";
 import { useMutation } from "../../hooks/useMutation";
+import * as S from "./ProfileChores.css";
 
 function ProfileChores() {
   const navigate = useNavigate();
@@ -77,11 +78,17 @@ function ProfileChores() {
       },
       options: {
         onSuccess: () => {
-          const updatedChores = chores.map((chore) => ({
-            ...chore,
-            status: newStatus,
-          }));
-          console.log(updatedChores);
+          const updatedChores = chores.map((chore) => {
+            if (chore.choreId === choreId) {
+              return {
+                ...chore,
+                status: newStatus,
+              };
+            }
+
+            return chore;
+          });
+
           setChores(updatedChores);
 
           toast.success("Chore status updated successfully");
@@ -101,6 +108,17 @@ function ProfileChores() {
     navigate(`/create-chore/${childId}`);
   };
 
+  const statusOptions = [
+    { value: CHORE_STATUS.COMPLETED, label: "Completed" },
+    { value: CHORE_STATUS.APPROVAL, label: "Awaiting Approval" },
+    { value: CHORE_STATUS.NOT_ACCEPTED, label: "Not Accepted" },
+    { value: CHORE_STATUS.IN_PROGRESS, label: "In Progress" },
+  ];
+
+  const convertStatus = (chore) => {
+    return statusOptions.find((status) => status.value === chore.status).label;
+  };
+
   return (
     <PageWrapper>
       <CircularProgressBar
@@ -112,60 +130,46 @@ function ProfileChores() {
         isChore={true}
       />
       <ProfileSwitch />
-      <Box sx={{ paddingBottom: 10 }}>
+      <S.List>
         {chores.map((chore) => (
-          <Paper
-            key={chore.choreId}
-            sx={{
-              display: "flex",
-              width: "100%",
-              mx: "auto",
-              justifyContent: "space-between",
-              marginY: 1,
-              padding: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box sx={{ bgcolor: "grey.300", padding: 1, marginRight: 2 }}>
-                <Typography sx={{ color: "pink" }}>${chore.amount}</Typography>
-              </Box>
-              <Box>
-                <Typography variant="body1">{chore.title}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Due: {chore.dueDate.split("T")[0]}
-                </Typography>
-              </Box>
-            </Box>
-            <Box>
-              <Select
+          <S.ListItem key={chore.choreId}>
+            <div className="reward-container">
+              <Typography>${chore.amount}</Typography>
+            </div>
+            <div className="info-container">
+              <Typography>{chore.title}</Typography>
+              <S.SecondaryText>
+                Due: {chore.dueDate.split("T")[0]}
+              </S.SecondaryText>
+            </div>
+            <div className="status-container">
+              <S.Chip status={chore.status}>
+                <span>{convertStatus(chore)}</span>
+              </S.Chip>
+            </div>
+            <div className="options-container">
+              <S.Select
                 value={chore.status}
                 onChange={(event) => handleStatusChange(event, chore.choreId)}
-                size="small"
-                sx={{ ml: 1 }}
               >
-                <MenuItem value="COMPLETED">Completed</MenuItem>
-                <MenuItem value="IN_PROGRESS">In Progress</MenuItem>
-                <MenuItem value="AWAITING_APPROVAL">Awaiting Approval</MenuItem>
-                <MenuItem value="NOT_ACCEPTED">Not Accepted</MenuItem>
-              </Select>
+                {statusOptions.map((option) => (
+                  <S.MenuItem value={option.value}>{option.label}</S.MenuItem>
+                ))}
+              </S.Select>
               <IconButton
                 onClick={() => removeChore(chore.choreId)}
                 color="error"
               >
                 <DeleteOutlineIcon />
               </IconButton>
-            </Box>
-          </Paper>
+            </div>
+          </S.ListItem>
         ))}
-        <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={navigateToChoreCreation}
-          >
-            <AddIcon />
-          </Fab>
-        </Box>
+      </S.List>
+      <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
+        <Fab color="primary" aria-label="add" onClick={navigateToChoreCreation}>
+          <AddIcon />
+        </Fab>
       </Box>
     </PageWrapper>
   );
