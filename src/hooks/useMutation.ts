@@ -8,6 +8,7 @@ interface MutateProps {
   options: {
     onSuccess?: (data: any) => {};
     onError?: (data: any) => {};
+    onSettled?: () => {};
   };
 }
 
@@ -17,7 +18,7 @@ export const useMutation = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const mutate = async ({ route, method, body, options = {} }: MutateProps) => {
-    const { onSuccess, onError } = options;
+    const { onSuccess, onError, onSettled } = options;
     try {
       setIsLoading(true);
       const response = await fetch(`${process.env.API_BASE}/api/${route}`, {
@@ -44,6 +45,7 @@ export const useMutation = () => {
       if (onError) onError(error);
     } finally {
       setIsLoading(false);
+      if (onSettled) onSettled();
     }
   };
 

@@ -33,10 +33,12 @@ function HeaderBanner() {
       options: {
         onSuccess: (_) => {
           removeCookie("user");
-          navigate("/login");
         },
         onError: () => {
           toast.error("Sorry, we failed to log you out");
+        },
+        onSettled: () => {
+          navigate("/login");
         },
       },
     });
