@@ -6,6 +6,8 @@ import ToastProvider from "./components/ToastProvider";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { CssBaseline } from "@mui/material/";
 import { AuthContextProvider } from "./context/AuthContextProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 export const themeOptions = createTheme({
   palette: {
@@ -80,13 +82,15 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={themeOptions}>
       <CssBaseline />
-      <BrowserRouter>
-        <ToastProvider>
-          <AuthContextProvider>
-            <App />
-          </AuthContextProvider>
-        </ToastProvider>
-      </BrowserRouter>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <BrowserRouter>
+          <ToastProvider>
+            <AuthContextProvider>
+              <App />
+            </AuthContextProvider>
+          </ToastProvider>
+        </BrowserRouter>
+      </LocalizationProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

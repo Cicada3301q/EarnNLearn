@@ -1,33 +1,24 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Paper,
-  Fab,
-  Select,
-  MenuItem,
-  Chip,
-} from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CHORE_STATUS, METHOD } from "../../constants/enums";
 import { useQuery } from "../../hooks/useQuery";
 import PageWrapper from "../../components/PageWrapper";
 import { useMutation } from "../../hooks/useMutation";
 import * as S from "./ProfileChores.css";
+import ChoreCreationModal from "../../components/ChoreCreationModal";
 
 function ProfileChores() {
-  const navigate = useNavigate();
   const location = useLocation();
+
   const [chores, setChores] = useState([]);
-  const [totalChoreCount, setTotalChoreCount] = useState(0);
-  const [completedChoreCount, setCompletedChoreCount] = useState(0);
+  const [openCreationModal, setOpenCreationModal] = useState(false);
+
   const { mutate: deleteChore } = useMutation();
   const { mutate: changeChoreStatus } = useMutation();
   const { child } = location.state;
@@ -42,8 +33,6 @@ function ProfileChores() {
   useEffect(() => {
     if (choreData) {
       setChores(choreData.chores);
-      setTotalChoreCount(choreData.totalChores);
-      setCompletedChoreCount(choreData.completedChores);
     }
   }, [choreData]);
 
@@ -104,10 +93,6 @@ function ProfileChores() {
     return <Typography>Loading...</Typography>;
   }
 
-  const navigateToChoreCreation = () => {
-    navigate(`/create-chore/${childId}`);
-  };
-
   const statusOptions = [
     { value: CHORE_STATUS.COMPLETED, label: "Completed" },
     { value: CHORE_STATUS.APPROVAL, label: "Awaiting Approval" },
@@ -124,8 +109,8 @@ function ProfileChores() {
       <CircularProgressBar
         size={150}
         thickness={4}
-        value={completedChoreCount}
-        maxValue={totalChoreCount}
+        value={choreData.completedChores}
+        maxValue={choreData.totalChores}
         name={firstName}
         isChore={true}
       />
@@ -134,43 +119,56 @@ function ProfileChores() {
         {chores.map((chore) => (
           <S.ListItem key={chore.choreId}>
             <div className="reward-container">
-              <Typography>${chore.amount}</Typography>
+              <Typography>${10}</Typography>
             </div>
-            <div className="info-container">
-              <Typography>{chore.title}</Typography>
-              <S.SecondaryText>
-                Due: {chore.dueDate.split("T")[0]}
-              </S.SecondaryText>
-            </div>
-            <div className="status-container">
-              <S.Chip status={chore.status}>
-                <span>{convertStatus(chore)}</span>
-              </S.Chip>
-            </div>
-            <div className="options-container">
-              <S.Select
-                value={chore.status}
-                onChange={(event) => handleStatusChange(event, chore.choreId)}
-              >
-                {statusOptions.map((option) => (
-                  <S.MenuItem value={option.value}>{option.label}</S.MenuItem>
-                ))}
-              </S.Select>
-              <IconButton
-                onClick={() => removeChore(chore.choreId)}
-                color="error"
-              >
-                <DeleteOutlineIcon />
-              </IconButton>
-            </div>
+            <S.ItemContainer>
+              <div className="chore-container">
+                <Typography>{chore.title}</Typography>
+                <div className="chore-status-container">
+                  <S.Chip status={chore.status}>
+                    <span>{convertStatus(chore)}</span>
+                  </S.Chip>
+                  <S.SecondaryText>
+                    Due: {chore.dueDate.split("T")[0]}
+                  </S.SecondaryText>
+                </div>
+              </div>
+              <div className="options-container">
+                <S.Select
+                  value={chore.status}
+                  onChange={(event) => handleStatusChange(event, chore.choreId)}
+                >
+                  {statusOptions.map((option) => (
+                    <S.MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </S.MenuItem>
+                  ))}
+                </S.Select>
+                <IconButton
+                  onClick={() => removeChore(chore.choreId)}
+                  color="error"
+                >
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </div>
+            </S.ItemContainer>
           </S.ListItem>
         ))}
       </S.List>
-      <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
-        <Fab color="primary" aria-label="add" onClick={navigateToChoreCreation}>
-          <AddIcon />
-        </Fab>
-      </Box>
+      <S.Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpenCreationModal(true)}
+      >
+        Create Chore
+      </S.Button>
+      {openCreationModal && (
+        <ChoreCreationModal
+          open={openCreationModal}
+          handleClose={() => setOpenCreationModal(false)}
+          childId={id}
+        />
+      )}
     </PageWrapper>
   );
 }

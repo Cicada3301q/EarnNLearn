@@ -6,8 +6,24 @@ import {
   Select as MuiSelect,
   MenuItem as MuiMenuItem,
   Typography,
+  Button as MuiButton,
 } from "@mui/material";
 import { CHORE_STATUS } from "../../constants/enums";
+
+const getStatusColor = (theme, status) => {
+  switch (status) {
+    case CHORE_STATUS.COMPLETED:
+      return theme.palette.success.main;
+    case CHORE_STATUS.APPROVAL:
+      return "orange";
+    case CHORE_STATUS.NOT_ACCEPTED:
+      return theme.palette.error.main;
+    case CHORE_STATUS.IN_PROGRESS:
+      return theme.palette.info.main;
+    default:
+      return "inherit";
+  }
+};
 
 export const List = styled(MuiList)(
   ({ theme }) => css`
@@ -33,7 +49,7 @@ export const ListItem = styled(MuiListItem)(
     background-color: ${theme.palette.secondary.contrastText};
     box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%),
       0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%);
-    height: 80px;
+    /* height: 80px; */
     width: 100%;
     padding: 0;
 
@@ -52,21 +68,21 @@ export const ListItem = styled(MuiListItem)(
         font-weight: 600;
       }
     }
+  `
+);
 
-    .info-container {
-      margin-right: 16px;
+export const ItemContainer = styled("div")(
+  () => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
 
-      div:last-child {
-        margin-top: 5px;
-      }
-    }
-
-    .status-container {
-      /* align-self: first baseline; */
-    }
-
-    .options-container {
-      margin-left: auto;
+    .chore-status-container {
+      display: flex;
+      margin-top: 4px;
+      gap: 8px;
     }
   `
 );
@@ -91,6 +107,12 @@ export const Select = styled(MuiSelect)(
   `
 );
 
+export const MenuItem = styled(MuiMenuItem)(
+  ({ theme }) => css`
+    font-size: ${theme.typography.body2};
+  `
+);
+
 export const Chip = styled("div")(
   ({ theme, status }) => css`
     display: flex;
@@ -99,8 +121,7 @@ export const Chip = styled("div")(
     height: 20px;
     padding: 1px 8px;
     border-radius: 25px;
-    border: 1px solid ${theme.palette.grey[800]};
-    background-color: ${theme.palette.grey[300]};
+    border: 2px solid ${getStatusColor(theme, status)};
 
     span {
       color: ${getStatusColor(theme, status)};
@@ -109,23 +130,8 @@ export const Chip = styled("div")(
   `
 );
 
-export const MenuItem = styled(MuiMenuItem)(
-  ({ theme }) => css`
-    font-size: ${theme.typography.body2};
+export const Button = styled(MuiButton)(
+  () => css`
+    margin-top: 16px;
   `
 );
-
-const getStatusColor = (theme, status) => {
-  switch (status) {
-    case CHORE_STATUS.COMPLETED:
-      return theme.palette.success.main;
-    case CHORE_STATUS.APPROVAL:
-      return "orange";
-    case CHORE_STATUS.NOT_ACCEPTED:
-      return theme.palette.error.main;
-    case CHORE_STATUS.IN_PROGRESS:
-      return theme.palette.info.main;
-    default:
-      return "inherit";
-  }
-};

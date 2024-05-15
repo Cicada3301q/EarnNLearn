@@ -5,7 +5,6 @@ import Register from "./pages/Register";
 import ProfileSelect from "./pages/ProfileSelect";
 import ProfileBalance from "./pages/ProfileBalance";
 import ProfileChores from "./pages/ProfileChores";
-import ChoreCreation from "./pages/ChoreCreation";
 import RedeemRequest from "./pages/RedeemRequest";
 import ProfileCreation from "./pages/ProfileCreation";
 import BabySitter from "./pages/BabySitter";
@@ -32,7 +31,6 @@ const App = () => {
           </Route>
           <Route path="/profile-balance/:id" element={<ProfileBalance />} />
           <Route path="/profile-chores" element={<ProfileChores />} />
-          <Route path="/create-chore/:childId" element={<ChoreCreation />} />
           <Route path="/redeem-request" element={<RedeemRequest />} />
           <Route path="/babysitter" element={<BabySitter />} />
         </Route>
