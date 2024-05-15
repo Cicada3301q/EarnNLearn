@@ -13,7 +13,7 @@ import { useMutation } from "../../hooks/useMutation";
 import * as S from "./ProfileChores.css";
 import ChoreCreationModal from "../../components/ChoreCreationModal";
 import { QueryContext } from "../../context/QueryContextProvider";
-import { useAuth } from "../../hooks/useAuth";
+import dayjs from "dayjs";
 
 function ProfileChores() {
   const location = useLocation();
@@ -88,8 +88,8 @@ function ProfileChores() {
       body: chore,
       options: {
         onSuccess: () => {
-          toast.success("Chore created successfully!");
           invalidateQueryKey(queryKey);
+          toast.success("Chore created successfully!");
           handleCloseModal();
         },
         onError: () => {
@@ -147,7 +147,7 @@ function ProfileChores() {
                     <span>{convertStatus(chore)}</span>
                   </S.Chip>
                   <S.SecondaryText>
-                    Due: {chore.dueDate.split("T")[0]}
+                    Due: {dayjs(chore.dueDate).format("MMMM D, YYYY")}
                   </S.SecondaryText>
                 </div>
               </div>

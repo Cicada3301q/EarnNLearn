@@ -65,7 +65,7 @@ function ProfileSelect() {
       ) : (
         <S.List>
           {children?.map((child, index) => (
-            <S.ListItem onClick={() => handleChildClick(child)}>
+            <S.ListItem key={child.id} onClick={() => handleChildClick(child)}>
               <S.ItemAvatar backgroundColor={colors[index % colors.length]} />
               <S.ListItemText>
                 {child.firstName} {child.lastName}
