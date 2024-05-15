@@ -63,6 +63,15 @@ export const themeOptions = createTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 768,
+      lg: 1200,
+      xl: 1500,
+    },
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
