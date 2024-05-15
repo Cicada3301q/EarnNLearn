@@ -29,8 +29,8 @@ const App = () => {
             <Route path="/profiles" element={<ProfileSelect />} />
             <Route path="/add-profile" element={<ProfileCreation />} />
           </Route>
+          <Route path="/profile-chores/:id" element={<ProfileChores />} />
           <Route path="/profile-balance/:id" element={<ProfileBalance />} />
-          <Route path="/profile-chores" element={<ProfileChores />} />
           <Route path="/redeem-request" element={<RedeemRequest />} />
           <Route path="/babysitter" element={<BabySitter />} />
         </Route>

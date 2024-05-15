@@ -5,11 +5,17 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import PageWrapper from "../../components/PageWrapper";
+import { useQuery } from "../../hooks/useQuery";
 
 function ProfileBalance() {
   const { id } = useParams();
+  console.log(id);
 
-  // Dummy data for the selected profile and transactions
+  const { data: child, isLoading: childLoading } = useQuery(
+    `child-${id}`,
+    `user/child/${id}`
+  );
+
   const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 }; // Added lifetimeEarnings for demonstration
   const transactions = [
     { id: 1, name: "Mow the Lawn", amount: 5, type: "deposit" },
@@ -25,7 +31,7 @@ function ProfileBalance() {
         thickness={4}
         value={profile.balance}
         maxValue={profile.lifetimeEarnings}
-        name={profile.name}
+        name={childLoading ? "loading.." : child.firstName}
       />
       <ProfileSwitch />
       <Typography component="h2" variant="h5" sx={{ marginY: 2 }}>

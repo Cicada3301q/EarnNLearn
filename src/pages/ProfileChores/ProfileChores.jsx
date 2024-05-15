@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CHORE_STATUS, METHOD, ROLE } from "../../constants/enums";
 import { useQuery } from "../../hooks/useQuery";
@@ -14,20 +14,26 @@ import * as S from "./ProfileChores.css";
 import ChoreCreationModal from "../../components/ChoreCreationModal";
 import { QueryContext } from "../../context/QueryContextProvider";
 import dayjs from "dayjs";
+import { useAuth } from "../../hooks/useAuth";
 
 function ProfileChores() {
-  const location = useLocation();
   const { invalidateQueryKey } = useContext(QueryContext);
+  const { id } = useParams();
+  const { user } = useAuth();
+  const isParent = user.role === ROLE.PARENT;
 
   const [openCreationModal, setOpenCreationModal] = useState(false);
 
   const { mutate: deleteChore } = useMutation();
   const { mutate: changeChoreStatus } = useMutation();
   const { mutate: createChore } = useMutation();
-  const { child } = location.state;
-  const { id, firstName } = child;
 
   const queryKey = `chores-${id}`;
+
+  const { data: child, isLoading: childLoading } = useQuery(
+    `child-${id}`,
+    `user/child/${id}`
+  );
 
   const {
     data: choreData,
@@ -129,10 +135,10 @@ function ProfileChores() {
         thickness={4}
         value={choreData?.completedChores || 0}
         maxValue={choreData?.totalChores || 1}
-        name={firstName}
+        name={childLoading ? "loading..." : child.firstName}
         isChore={true}
       />
-      <ProfileSwitch />
+      <ProfileSwitch child={child} />
       <S.List>
         {chores.map((chore) => (
           <S.ListItem key={chore.choreId}>
@@ -173,13 +179,15 @@ function ProfileChores() {
           </S.ListItem>
         ))}
       </S.List>
-      <S.Button
-        variant="contained"
-        startIcon={<AddIcon />}
-        onClick={() => setOpenCreationModal(true)}
-      >
-        Create Chore
-      </S.Button>
+      {isParent && (
+        <S.Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setOpenCreationModal(true)}
+        >
+          Create Chore
+        </S.Button>
+      )}
       {openCreationModal && (
         <ChoreCreationModal
           open={openCreationModal}

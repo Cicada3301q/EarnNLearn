@@ -41,11 +41,7 @@ function ProfileSelect() {
   };
 
   const handleChildClick = (child) => {
-    navigate("/profile-chores/", {
-      state: {
-        child: child,
-      },
-    });
+    navigate(`/profile-chores/${child.id}`);
   };
 
   return (
