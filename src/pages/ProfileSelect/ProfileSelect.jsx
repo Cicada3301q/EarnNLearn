@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import PageWrapper from "../../components/PageWrapper";
 import { PageTitle } from "../../components/Typography";
@@ -9,7 +9,11 @@ import { useQuery } from "../../hooks/useQuery";
 
 function ProfileSelect() {
   const navigate = useNavigate();
-  const { data: children, isLoading, isError } = useQuery("user/children/");
+  const {
+    data: children,
+    isLoading,
+    isError,
+  } = useQuery("children", "user/children/");
 
   const colors = [
     "#f44336",

@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { METHOD } from "../constants/enums";
+import { QueryContext } from "../context/QueryContextProvider";
 
-export const useQuery = (route: string) => {
+export const useQuery = (key: string, route: string) => {
+  const { queryKeys } = useContext(QueryContext);
+
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -31,7 +34,7 @@ export const useQuery = (route: string) => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [queryKeys[key]]);
 
   return { data, isError, isLoading };
 };

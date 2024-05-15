@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import { Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -6,35 +6,36 @@ import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CHORE_STATUS, METHOD } from "../../constants/enums";
+import { CHORE_STATUS, METHOD, ROLE } from "../../constants/enums";
 import { useQuery } from "../../hooks/useQuery";
 import PageWrapper from "../../components/PageWrapper";
 import { useMutation } from "../../hooks/useMutation";
 import * as S from "./ProfileChores.css";
 import ChoreCreationModal from "../../components/ChoreCreationModal";
+import { QueryContext } from "../../context/QueryContextProvider";
+import { useAuth } from "../../hooks/useAuth";
 
 function ProfileChores() {
   const location = useLocation();
+  const { invalidateQueryKey } = useContext(QueryContext);
 
-  const [chores, setChores] = useState([]);
   const [openCreationModal, setOpenCreationModal] = useState(false);
 
   const { mutate: deleteChore } = useMutation();
   const { mutate: changeChoreStatus } = useMutation();
+  const { mutate: createChore } = useMutation();
   const { child } = location.state;
   const { id, firstName } = child;
+
+  const queryKey = `chores-${id}`;
 
   const {
     data: choreData,
     isLoading: choresLoading,
     isError: choresError,
-  } = useQuery(`chores/child/${id}`);
+  } = useQuery(queryKey, `chores/child/${id}`);
 
-  useEffect(() => {
-    if (choreData) {
-      setChores(choreData.chores);
-    }
-  }, [choreData]);
+  const chores = !choresLoading && !choresError && choreData.chores;
 
   if (choresError) {
     toast.error("Failed to load chores");
@@ -46,8 +47,7 @@ function ProfileChores() {
       method: METHOD.DELETE,
       options: {
         onSuccess: () => {
-          const updatedChores = chores.filter((chore) => chore.id === choreId);
-          setChores(updatedChores);
+          invalidateQueryKey(queryKey);
           toast.success("Chore successfully deleted");
         },
         onError: () => {
@@ -67,19 +67,7 @@ function ProfileChores() {
       },
       options: {
         onSuccess: () => {
-          const updatedChores = chores.map((chore) => {
-            if (chore.choreId === choreId) {
-              return {
-                ...chore,
-                status: newStatus,
-              };
-            }
-
-            return chore;
-          });
-
-          setChores(updatedChores);
-
+          invalidateQueryKey(queryKey);
           toast.success("Chore status updated successfully");
         },
         onError: () => {
@@ -93,11 +81,41 @@ function ProfileChores() {
     return <Typography>Loading...</Typography>;
   }
 
+  const handleCreateChore = (chore) => {
+    createChore({
+      route: "chores/create",
+      method: METHOD.POST,
+      body: chore,
+      options: {
+        onSuccess: () => {
+          toast.success("Chore created successfully!");
+          invalidateQueryKey(queryKey);
+          handleCloseModal();
+        },
+        onError: () => {
+          toast.error("Failed to create chore");
+        },
+      },
+    });
+  };
+
+  const handleCloseModal = () => {
+    setOpenCreationModal(false);
+  };
+
   const statusOptions = [
-    { value: CHORE_STATUS.COMPLETED, label: "Completed" },
-    { value: CHORE_STATUS.APPROVAL, label: "Awaiting Approval" },
-    { value: CHORE_STATUS.NOT_ACCEPTED, label: "Not Accepted" },
-    { value: CHORE_STATUS.IN_PROGRESS, label: "In Progress" },
+    { value: CHORE_STATUS.COMPLETED, label: "Completed", role: ROLE.PARENT },
+    {
+      value: CHORE_STATUS.APPROVAL,
+      label: "Awaiting Approval",
+      role: ROLE.CHILD,
+    },
+    {
+      value: CHORE_STATUS.NOT_ACCEPTED,
+      label: "Not Accepted",
+      role: ROLE.CHILD,
+    },
+    { value: CHORE_STATUS.IN_PROGRESS, label: "In Progress", role: ROLE.CHILD },
   ];
 
   const convertStatus = (chore) => {
@@ -109,8 +127,8 @@ function ProfileChores() {
       <CircularProgressBar
         size={150}
         thickness={4}
-        value={choreData.completedChores}
-        maxValue={choreData.totalChores}
+        value={choreData?.completedChores || 0}
+        maxValue={choreData?.totalChores || 1}
         name={firstName}
         isChore={true}
       />
@@ -165,7 +183,8 @@ function ProfileChores() {
       {openCreationModal && (
         <ChoreCreationModal
           open={openCreationModal}
-          handleClose={() => setOpenCreationModal(false)}
+          handleClose={handleCloseModal}
+          handleCreate={handleCreateChore}
           childId={id}
         />
       )}

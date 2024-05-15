@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Stack, Avatar, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import { callApi } from "../../utils/api.util";
-import { CHORE_STATUS, METHOD } from "../../constants/enums";
+import { CHORE_STATUS } from "../../constants/enums";
 import * as S from "./ChoreCreationModal.css";
-import { useMutation } from "../../hooks/useMutation";
 
-function ChoreCreationModal({ open, handleClose, childId }) {
+function ChoreCreationModal({ open, handleClose, handleCreate, childId }) {
   const [choreName, setChoreName] = useState("");
   const [choreValue, setChoreValue] = useState(0);
   const [dueDate, setDueDate] = useState(null);
   const [errors, setErrors] = useState({});
-  const { mutate: createChore } = useMutation();
 
   const validateFields = () => {
     const newErrors = {};
@@ -27,7 +23,7 @@ function ChoreCreationModal({ open, handleClose, childId }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCreate = () => {
+  const handleCreateClick = () => {
     if (!validateFields()) {
       toast.error("Please correct the errors before submitting.");
       return;
@@ -41,20 +37,7 @@ function ChoreCreationModal({ open, handleClose, childId }) {
       childUserId: childId,
     };
 
-    createChore({
-      route: "chores/create",
-      method: METHOD.POST,
-      body: choreData,
-      options: {
-        onSuccess: () => {
-          toast.success("Chore created successfully!");
-          handleClose();
-        },
-        onError: () => {
-          toast.error("Failed to create chore");
-        },
-      },
-    });
+    handleCreate(choreData);
   };
 
   return (
@@ -110,7 +93,11 @@ function ChoreCreationModal({ open, handleClose, childId }) {
             spacing={2}
             sx={{ mt: 4, width: "100%", justifyContent: "center" }}
           >
-            <Button variant="contained" color="primary" onClick={handleCreate}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateClick}
+            >
               Create
             </Button>
             <Button variant="outlined" color="secondary" onClick={handleClose}>
