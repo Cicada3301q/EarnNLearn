@@ -6,7 +6,7 @@ import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CHORE_STATUS, METHOD, ROLE } from "../../constants/enums";
+import { CHORE_STATUS, HTTP_METHOD, ROLE } from "../../constants/enums";
 import { useQuery } from "../../hooks/useQuery";
 import PageWrapper from "../../components/PageWrapper";
 import { useMutation } from "../../hooks/useMutation";
@@ -20,7 +20,7 @@ function ProfileChores() {
   const { invalidateQueryKey } = useContext(QueryContext);
   const { id } = useParams();
   const { user } = useAuth();
-  const isParent = user.role === ROLE.PARENT;
+  const isParent = user?.role === ROLE.PARENT;
 
   const [openCreationModal, setOpenCreationModal] = useState(false);
 
@@ -50,7 +50,7 @@ function ProfileChores() {
   const removeChore = (choreId) => {
     deleteChore({
       route: `chores/delete/${choreId}`,
-      method: METHOD.DELETE,
+      method: HTTP_METHOD.DELETE,
       options: {
         onSuccess: () => {
           invalidateQueryKey(queryKey);
@@ -67,7 +67,7 @@ function ProfileChores() {
     const newStatus = event.target.value;
     changeChoreStatus({
       route: `chores/update/${choreId}`,
-      method: METHOD.PUT,
+      method: HTTP_METHOD.PUT,
       body: {
         status: newStatus,
       },
@@ -90,7 +90,7 @@ function ProfileChores() {
   const handleCreateChore = (chore) => {
     createChore({
       route: "chores/create",
-      method: METHOD.POST,
+      method: HTTP_METHOD.POST,
       body: chore,
       options: {
         onSuccess: () => {
@@ -143,10 +143,10 @@ function ProfileChores() {
         {chores.map((chore) => (
           <S.ListItem key={chore.choreId}>
             <div className="reward-container">
-              <Typography>${10}</Typography>
+              <Typography>${chore.amount}</Typography>
             </div>
             <S.ItemContainer>
-              <div className="chore-container">
+              <div>
                 <Typography>{chore.title}</Typography>
                 <div className="chore-status-container">
                   <S.Chip status={chore.status}>
@@ -168,12 +168,14 @@ function ProfileChores() {
                     </S.MenuItem>
                   ))}
                 </S.Select>
-                <IconButton
-                  onClick={() => removeChore(chore.choreId)}
-                  color="error"
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
+                {isParent && (
+                  <IconButton
+                    onClick={() => removeChore(chore.choreId)}
+                    color="error"
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                )}
               </div>
             </S.ItemContainer>
           </S.ListItem>

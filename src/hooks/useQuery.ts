@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { METHOD } from "../constants/enums";
+import { HTTP_METHOD } from "../constants/enums";
 import { QueryContext } from "../context/QueryContextProvider";
 
 export const useQuery = (key: string, route: string) => {
@@ -12,7 +12,7 @@ export const useQuery = (key: string, route: string) => {
   const getData = async () => {
     try {
       const response = await fetch(`${process.env.API_BASE}/api/${route}`, {
-        method: METHOD.GET,
+        method: HTTP_METHOD.GET,
         headers: {
           "Content-Type": "application/json",
         },

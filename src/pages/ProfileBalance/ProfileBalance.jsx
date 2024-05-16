@@ -9,7 +9,6 @@ import { useQuery } from "../../hooks/useQuery";
 
 function ProfileBalance() {
   const { id } = useParams();
-  console.log(id);
 
   const { data: child, isLoading: childLoading } = useQuery(
     `child-${id}`,

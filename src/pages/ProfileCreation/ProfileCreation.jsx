@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
+import { HTTP_METHOD } from "../../constants/enums";
 
 function ProfileCreation() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ function ProfileCreation() {
       // Call the backend API to register a child
       const response = await callApi(
         "/api/user/register-child",
-        METHOD.POST,
+        HTTP_METHOD.POST,
         requestBody
       );
       if (response.ok) {

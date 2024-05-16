@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { TextField, Avatar, InputLabel } from "@mui/material";
-import { METHOD, ROLE } from "../../constants/enums";
+import { HTTP_METHOD, ROLE } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
 import { toast } from "react-toastify";
 import { useMutation } from "../../hooks/useMutation";
@@ -24,7 +24,7 @@ function Login() {
 
     login({
       route: "user/login/",
-      method: METHOD.POST,
+      method: HTTP_METHOD.POST,
       body: requestBody,
       options: {
         onSuccess: (response) => {

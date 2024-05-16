@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Toolbar, Button, IconButton, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-import { METHOD } from "../../constants/enums";
+import { HTTP_METHOD } from "../../constants/enums";
 import * as S from "./HeaderBanner.css";
 import { toast } from "react-toastify";
 import { useMutation } from "../../hooks/useMutation";
@@ -27,20 +27,12 @@ function HeaderBanner() {
   };
 
   const handleSignOut = () => {
+    removeCookie("user");
+    navigate("/login");
+
     logout({
       route: "user/logout/",
-      method: METHOD.POST,
-      options: {
-        onSuccess: (_) => {
-          removeCookie("user");
-        },
-        onError: () => {
-          toast.error("Sorry, we failed to log you out");
-        },
-        onSettled: () => {
-          navigate("/login");
-        },
-      },
+      method: HTTP_METHOD.POST,
     });
   };
 

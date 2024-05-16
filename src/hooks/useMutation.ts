@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { METHOD } from "../constants/enums";
+import { HTTP_METHOD } from "../constants/enums";
 
 interface MutateProps {
   route: string;
-  method: METHOD;
+  method: HTTP_METHOD;
   body?: any;
   options: {
     onSuccess?: (data: any) => {};

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
+import { HTTP_METHOD } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
 
 function Register() {
@@ -55,7 +55,7 @@ function Register() {
     try {
       const response = await callApi(
         "/api/user/register-parent",
-        METHOD.POST,
+        HTTP_METHOD.POST,
         requestBody
       );
       if (response.ok) {
