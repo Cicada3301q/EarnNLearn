@@ -28,20 +28,21 @@ function ProfileChores() {
   const { mutate: changeChoreStatus } = useMutation();
   const { mutate: createChore } = useMutation();
 
+  const childUserResponse = useQuery(`child-${id}`, `user/child/${id}`);
+
+  const { data: childUser, isLoading: isChildUserLoading } = childUserResponse;
+
   const queryKey = `chores-${id}`;
 
-  const { data: child, isLoading: childLoading } = useQuery(
-    `child-${id}`,
-    `user/child/${id}`
-  );
+  const choreDataResponse = useQuery(queryKey, `chores/child/${id}`);
 
   const {
     data: choreData,
     isLoading: choresLoading,
     isError: choresError,
-  } = useQuery(queryKey, `chores/child/${id}`);
+  } = choreDataResponse;
 
-  const chores = !choresLoading && !choresError && choreData.chores;
+  const choreList = !choresLoading && !choresError && choreData.chores;
 
   if (choresError) {
     toast.error("Failed to load chores");
@@ -135,12 +136,12 @@ function ProfileChores() {
         thickness={4}
         value={choreData?.completedChores || 0}
         maxValue={choreData?.totalChores || 1}
-        name={childLoading ? "loading..." : child.firstName}
+        name={isChildUserLoading ? "loading..." : childUser.firstName}
         isChore={true}
       />
-      <ProfileSwitch child={child} />
+      <ProfileSwitch />
       <S.List>
-        {chores.map((chore) => (
+        {choreList.map((chore) => (
           <S.ListItem key={chore.choreId}>
             <div className="reward-container">
               <Typography>${chore.amount}</Typography>
