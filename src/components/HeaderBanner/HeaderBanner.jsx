@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { Toolbar, Button, IconButton, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
+import { HTTP_METHOD } from "../../constants/enums";
 import * as S from "./HeaderBanner.css";
 import { toast } from "react-toastify";
+import { useMutation } from "../../hooks/useMutation";
+import { removeCookie } from "../../utils/cookie.util";
 
 function HeaderBanner() {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const { mutate: logout } = useMutation();
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,19 +26,20 @@ function HeaderBanner() {
     handleMenuClose();
   };
 
-  const handleSignOut = async () => {
-    try {
-      await callApi("/api/user/logout", METHOD.POST);
-      navigate("/login");
-    } catch (error) {
-      toast.error("Sorry, we failed to log you out");
-    }
+  const handleSignOut = () => {
+    removeCookie("user");
+    navigate("/login");
+
+    logout({
+      route: "user/logout/",
+      method: HTTP_METHOD.POST,
+    });
   };
 
   return (
     <S.Appbar position="static">
       <Toolbar>
-        <S.Link to={"/profiles"}>
+        <S.Link to={"/"}>
           <S.Avatar src="/EarnNLearn.jpg" alt="Logo" />
           <S.LogoText>EarnNLearn</S.LogoText>
         </S.Link>

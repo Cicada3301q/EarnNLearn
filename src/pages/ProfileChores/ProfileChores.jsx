@@ -1,118 +1,132 @@
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Paper,
-  Fab,
-  Select,
-  MenuItem,
-} from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import React, { useState, useContext } from "react";
+import { Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
+import { CHORE_STATUS, HTTP_METHOD, ROLE } from "../../constants/enums";
+import { useQuery } from "../../hooks/useQuery";
 import PageWrapper from "../../components/PageWrapper";
+import { useMutation } from "../../hooks/useMutation";
+import * as S from "./ProfileChores.css";
+import ChoreCreationModal from "../../components/ChoreCreationModal";
+import { QueryContext } from "../../context/QueryContextProvider";
+import dayjs from "dayjs";
+import { useAuth } from "../../hooks/useAuth";
 
 function ProfileChores() {
-  const { childId } = useParams();
-  const [chores, setChores] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState({
-    name: "Alice",
-    balance: 50,
-    lifetimeEarnings: 100,
-  });
+  const { invalidateQueryKey } = useContext(QueryContext);
+  const { id } = useParams();
+  const { user } = useAuth();
+  const isParent = user?.role === ROLE.PARENT;
 
-  const navigate = useNavigate();
+  const [openCreationModal, setOpenCreationModal] = useState(false);
 
-  useEffect(() => {
-    const fetchChores = async () => {
-      setLoading(true);
-      try {
-        const response = await callApi(
-          `/api/chores/child/${childId}`,
-          METHOD.GET
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setChores(data);
-        } else {
-          toast.error("Failed to fetch chores.");
-        }
-      } catch (error) {
-        console.error("Failed to fetch chores", error);
-        toast.error("Failed to fetch chores due to an error: " + error.message);
-      }
-      setLoading(false);
-    };
-    fetchChores();
-  }, [childId]);
+  const { mutate: deleteChore } = useMutation();
+  const { mutate: changeChoreStatus } = useMutation();
+  const { mutate: createChore } = useMutation();
 
-  const removeChore = async (choreId) => {
-    try {
-      const response = await callApi(
-        `/api/chores/delete/${choreId}`,
-        METHOD.DELETE
-      );
-      if (response.ok) {
-        const updatedChores = chores.filter(
-          (chore) => chore.choreId !== choreId
-        );
-        setChores(updatedChores);
-        toast.success("Chore successfully deleted");
-      } else {
-        toast.error("Failed to delete chore.");
-      }
-    } catch (error) {
-      console.error("Failed to delete chore", error);
-      toast.error("Failed to delete chore due to an error: " + error.message);
-    }
-  };
+  const childUserResponse = useQuery(`child-${id}`, `user/child/${id}`);
 
-  const updateChore = async (choreId, status) => {
-    try {
-      const response = await callApi(
-        `/api/chores/update/${choreId}`,
-        METHOD.PUT,
-        {
-          status,
-        }
-      );
-      if (response.ok) {
-        const updatedChore = await response.json();
-        const updatedChores = chores.map((chore) =>
-          chore.choreId === choreId
-            ? { ...chore, status: updatedChore.status }
-            : chore
-        );
-        setChores(updatedChores);
-        toast.success("Chore status updated successfully");
-      } else {
-        toast.error("Failed to update chore.");
-      }
-    } catch (error) {
-      console.error("Failed to update chore", error);
-      toast.error("Failed to update chore due to an error: " + error.message);
-    }
+  const { data: childUser, isLoading: isChildUserLoading } = childUserResponse;
+
+  const queryKey = `chores-${id}`;
+
+  const choreDataResponse = useQuery(queryKey, `chores/child/${id}`);
+
+  const {
+    data: choreData,
+    isLoading: choresLoading,
+    isError: choresError,
+  } = choreDataResponse;
+
+  const choreList = !choresLoading && !choresError && choreData.chores;
+
+  if (choresError) {
+    toast.error("Failed to load chores");
+  }
+
+  const removeChore = (choreId) => {
+    deleteChore({
+      route: `chores/delete/${choreId}`,
+      method: HTTP_METHOD.DELETE,
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Chore successfully deleted");
+        },
+        onError: () => {
+          toast.error("Failed to delete chore.");
+        },
+      },
+    });
   };
 
   const handleStatusChange = (event, choreId) => {
     const newStatus = event.target.value;
-    updateChore(choreId, newStatus);
+    changeChoreStatus({
+      route: `chores/update/${choreId}`,
+      method: HTTP_METHOD.PUT,
+      body: {
+        status: newStatus,
+      },
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Chore status updated successfully");
+        },
+        onError: () => {
+          toast.error("Failed to update chore.");
+        },
+      },
+    });
   };
 
-  if (loading) {
+  if (choresLoading) {
     return <Typography>Loading...</Typography>;
   }
 
-  const navigateToChoreCreation = () => {
-    navigate(`/create-chore/${childId}`);
+  const handleCreateChore = (chore) => {
+    createChore({
+      route: "chores/create",
+      method: HTTP_METHOD.POST,
+      body: chore,
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Chore created successfully!");
+          handleCloseModal();
+        },
+        onError: () => {
+          toast.error("Failed to create chore");
+        },
+      },
+    });
+  };
+
+  const handleCloseModal = () => {
+    setOpenCreationModal(false);
+  };
+
+  const statusOptions = [
+    { value: CHORE_STATUS.COMPLETED, label: "Completed", role: ROLE.PARENT },
+    {
+      value: CHORE_STATUS.APPROVAL,
+      label: "Awaiting Approval",
+      role: ROLE.CHILD,
+    },
+    {
+      value: CHORE_STATUS.NOT_ACCEPTED,
+      label: "Not Accepted",
+      role: ROLE.CHILD,
+    },
+    { value: CHORE_STATUS.IN_PROGRESS, label: "In Progress", role: ROLE.CHILD },
+  ];
+
+  const convertStatus = (chore) => {
+    return statusOptions.find((status) => status.value === chore.status).label;
   };
 
   return (
@@ -120,67 +134,71 @@ function ProfileChores() {
       <CircularProgressBar
         size={150}
         thickness={4}
-        value={profile.balance}
-        maxValue={profile.lifetimeEarnings}
-        name={profile.name}
+        value={choreData?.completedChores || 0}
+        maxValue={choreData?.totalChores || 1}
+        name={isChildUserLoading ? "loading..." : childUser.firstName}
         isChore={true}
       />
       <ProfileSwitch />
-      <Box sx={{ paddingBottom: 10 }}>
-        {chores.map((chore) => (
-          <Paper
-            key={chore.choreId}
-            sx={{
-              display: "flex",
-              width: "100%",
-              mx: "auto",
-              justifyContent: "space-between",
-              marginY: 1,
-              padding: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box sx={{ bgcolor: "grey.300", padding: 1, marginRight: 2 }}>
-                <Typography sx={{ color: "pink" }}>${chore.amount}</Typography>
-              </Box>
-              <Box>
-                <Typography variant="body1">{chore.title}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Due: {chore.dueDate.split("T")[0]}
-                </Typography>
-              </Box>
-            </Box>
-            <Box>
-              <Select
-                value={chore.status}
-                onChange={(event) => handleStatusChange(event, chore.choreId)}
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value="COMPLETED">Completed</MenuItem>
-                <MenuItem value="IN_PROGRESS">In Progress</MenuItem>
-                <MenuItem value="AWAITING_APPROVAL">Awaiting Approval</MenuItem>
-                <MenuItem value="NOT_ACCEPTED">Not Accepted</MenuItem>
-              </Select>
-              <IconButton
-                onClick={() => removeChore(chore.choreId)}
-                color="error"
-              >
-                <DeleteOutlineIcon />
-              </IconButton>
-            </Box>
-          </Paper>
+      <S.List>
+        {choreList.map((chore) => (
+          <S.ListItem key={chore.choreId}>
+            <div className="reward-container">
+              <Typography>${chore.amount}</Typography>
+            </div>
+            <S.ItemContainer>
+              <div>
+                <Typography>{chore.title}</Typography>
+                <div className="chore-status-container">
+                  <S.Chip status={chore.status}>
+                    <span>{convertStatus(chore)}</span>
+                  </S.Chip>
+                  <S.SecondaryText>
+                    Due: {dayjs(chore.dueDate).format("MMMM D, YYYY")}
+                  </S.SecondaryText>
+                </div>
+              </div>
+              <div className="options-container">
+                <S.Select
+                  value={chore.status}
+                  onChange={(event) => handleStatusChange(event, chore.choreId)}
+                >
+                  {statusOptions.map((option) => (
+                    <S.MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </S.MenuItem>
+                  ))}
+                </S.Select>
+                {isParent && (
+                  <IconButton
+                    onClick={() => removeChore(chore.choreId)}
+                    color="error"
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                )}
+              </div>
+            </S.ItemContainer>
+          </S.ListItem>
         ))}
-        <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={navigateToChoreCreation}
-          >
-            <AddIcon />
-          </Fab>
-        </Box>
-      </Box>
+      </S.List>
+      {isParent && (
+        <S.Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setOpenCreationModal(true)}
+        >
+          Create Chore
+        </S.Button>
+      )}
+      {openCreationModal && (
+        <ChoreCreationModal
+          open={openCreationModal}
+          handleClose={handleCloseModal}
+          handleCreate={handleCreateChore}
+          childId={id}
+        />
+      )}
     </PageWrapper>
   );
 }

@@ -1,54 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Avatar,
-  InputLabel,
-} from "@mui/material";
-import { callApi } from "../../utils/api.util";
-import { METHOD } from "../../constants/enums";
-import { getCookie } from "../../utils/auth.util";
+import React, { useState } from "react";
+import { Link, useNavigate, Navigate } from "react-router-dom";
+import { TextField, Avatar, InputLabel } from "@mui/material";
+import { HTTP_METHOD, ROLE } from "../../constants/enums";
 import PageWrapper from "../../components/PageWrapper";
+import { toast } from "react-toastify";
+import { useMutation } from "../../hooks/useMutation";
+import { useAuth } from "../../hooks/useAuth";
+import * as S from "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { addUser, isAuth } = useAuth();
+  const { mutate: login, isError } = useMutation();
 
-  useEffect(() => {
-    const isAuth = getCookie("jwt");
-
-    if (isAuth) {
-      navigate("/profiles");
-    }
-  }, []);
-
-  const handleSubmit = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
     const requestBody = {
       email,
       password,
     };
 
-    try {
-      const response = await callApi(
-        "/api/user/login",
-        METHOD.POST,
-        requestBody
-      );
+    login({
+      route: "user/login/",
+      method: HTTP_METHOD.POST,
+      body: requestBody,
+      options: {
+        onSuccess: (response) => {
+          const user = response.returnedUser;
+          addUser(user);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        navigate("/profiles");
-      }
-    } catch (error) {
-      alert("failed to login, sorry", error.message);
-    }
+          if (user.role === ROLE.PARENT) {
+            navigate("/profiles");
+          } else {
+            navigate(`/profile-chores/${user.id}`);
+          }
+        },
+        onError: (_) => {
+          toast.error("Invalid credentials");
+        },
+      },
+    });
   };
+
+  if (isAuth) {
+    return <Navigate to="/profiles" />;
+  }
 
   return (
     <PageWrapper>
@@ -57,15 +55,9 @@ function Login() {
         alt="Logo"
         sx={{ width: 100, height: 100, marginBottom: 2 }} // Adjust size as needed
       />
-      <Typography
-        component="h1"
-        variant="h5"
-        sx={{ marginBottom: 2, color: "hotpink" }}
-      >
-        EarnNLearn
-      </Typography>
-      <Box component="form" noValidate className="form">
-        <InputLabel htmlFor="email">Email</InputLabel>
+      <S.Title>EarnNLearn</S.Title>
+      <S.Form>
+        <InputLabel>Email</InputLabel>
         <TextField
           margin="normal"
           required
@@ -74,9 +66,9 @@ function Login() {
           name="email"
           autoComplete="email"
           autoFocus
-          className="textField"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={isError}
         />
         <InputLabel htmlFor="password">Password</InputLabel>
         <TextField
@@ -87,36 +79,26 @@ function Login() {
           type="password"
           id="password"
           autoComplete="current-password"
-          className="textField"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={isError}
+          helperText={isError && "Email or password is incorrect."}
         />
-        <Typography className="accountPrompt">
-          Don't have an account?{" "}
+        <S.RegisterText>
+          Don't have an account?
           <Link to="/register" className="linkText">
             Register.
           </Link>
-        </Typography>
-        <Button
+        </S.RegisterText>
+        <S.LoginButton
           type="submit"
           fullWidth
           variant="contained"
-          className="signInButton"
-          sx={{ mt: 3, mb: 2, backgroundColor: "#0D99FF" }}
-          onClick={(e) => handleSubmit(e)}
+          onClick={(e) => handleLogin(e)}
         >
           Sign In
-        </Button>
-        {/*route to the Profiles page for testing */}
-        <Button
-          component={Link}
-          to="/profiles"
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Go to Profiles
-        </Button>
-      </Box>
+        </S.LoginButton>
+      </S.Form>
     </PageWrapper>
   );
 }

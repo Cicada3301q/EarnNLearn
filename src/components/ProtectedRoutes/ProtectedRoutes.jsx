@@ -1,11 +1,13 @@
 import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import { getCookie } from "../../utils/auth.util";
+import { useAuth } from "../../hooks/useAuth";
 
 const ProtectedRoutes = () => {
-  const isAuth = getCookie("jwt");
+  const { isAuth } = useAuth();
 
-  return !!isAuth ? <Outlet /> : <Navigate to="/login" />;
+  if (isAuth) return <Outlet />;
+
+  return <Navigate to="/login" />;
 };
 
 export default ProtectedRoutes;

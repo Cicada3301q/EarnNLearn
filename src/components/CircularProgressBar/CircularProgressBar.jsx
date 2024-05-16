@@ -24,11 +24,9 @@ function CircularProgressBar({
       const difference = Math.abs(targetValue - animatedValue);
       const increment = Math.max(1, difference / 7);
 
-      if (animatedValue < targetValue) {
-        setAnimatedValue((prevValue) =>
-          Math.min(prevValue + increment, targetValue)
-        );
-      }
+      setAnimatedValue((prevValue) =>
+        Math.min(prevValue + increment, targetValue)
+      );
     };
 
     let timer = setInterval(() => {

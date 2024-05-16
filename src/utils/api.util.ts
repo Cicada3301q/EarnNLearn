@@ -1,6 +1,10 @@
-import { METHOD } from "../constants/enums";
+import { HTTP_METHOD } from "../constants/enums";
 
-export const callApi = async (apiRoute: string, method: METHOD, body?: any) => {
+export const callApi = async (
+  apiRoute: string,
+  method: HTTP_METHOD,
+  body?: any
+) => {
   try {
     return await fetch(`${process.env.API_BASE}${apiRoute}`, {
       method: method,

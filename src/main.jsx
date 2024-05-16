@@ -5,6 +5,10 @@ import { BrowserRouter } from "react-router-dom";
 import ToastProvider from "./components/ToastProvider";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { CssBaseline } from "@mui/material/";
+import { AuthContextProvider } from "./context/AuthContextProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import QueryContextProvider from "./context/QueryContextProvider";
 
 export const themeOptions = createTheme({
   palette: {
@@ -62,6 +66,15 @@ export const themeOptions = createTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 768,
+      lg: 1200,
+      xl: 1500,
+    },
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -70,11 +83,17 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={themeOptions}>
       <CssBaseline />
-      <BrowserRouter>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
-      </BrowserRouter>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <QueryContextProvider>
+          <BrowserRouter>
+            <ToastProvider>
+              <AuthContextProvider>
+                <App />
+              </AuthContextProvider>
+            </ToastProvider>
+          </BrowserRouter>
+        </QueryContextProvider>
+      </LocalizationProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

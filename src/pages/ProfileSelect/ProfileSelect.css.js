@@ -17,12 +17,20 @@ export const Avatar = styled(MuiAvatar)(
 );
 
 export const List = styled(MuiList)(
-  () => css`
+  ({ theme }) => css`
     margin-top: 16px;
-    width: 60%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 16px;
+
+    ${theme.breakpoints.up("md")} {
+      width: 75%;
+    }
+
+    ${theme.breakpoints.up("lg")} {
+      width: 50%;
+    }
   `
 );
 
