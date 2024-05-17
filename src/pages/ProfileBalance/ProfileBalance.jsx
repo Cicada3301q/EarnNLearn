@@ -10,17 +10,15 @@ import { useQuery } from "../../hooks/useQuery";
 function ProfileBalance() {
   const { id } = useParams();
 
-  const { data: child, isLoading: childLoading } = useQuery(
-    `child-${id}`,
-    `user/child/${id}`
-  );
+  const childUserResponse = useQuery(`child-${id}`, `user/child/${id}`);
+
+  const { data: childUser, isLoading: isChildUserLoading } = childUserResponse;
 
   const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 }; // Added lifetimeEarnings for demonstration
   const transactions = [
     { id: 1, name: "Mow the Lawn", amount: 5, type: "deposit" },
     { id: 2, name: "Weekly Allowance", amount: 10, type: "deposit" },
     { id: 3, name: "Candy Store", amount: -3, type: "withdrawal" },
-    // ... more transactions
   ];
 
   return (
@@ -30,7 +28,7 @@ function ProfileBalance() {
         thickness={4}
         value={profile.balance}
         maxValue={profile.lifetimeEarnings}
-        name={childLoading ? "loading.." : child.firstName}
+        name={isChildUserLoading ? "loading.." : childUser.firstName}
       />
       <ProfileSwitch />
       <Typography component="h2" variant="h5" sx={{ marginY: 2 }}>
@@ -43,8 +41,8 @@ function ProfileBalance() {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between", // This spreads out the children to both ends
-                paddingY: 1, // Adds padding to the top and bottom
+                justifyContent: "space-between",
+                paddingY: 1,
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -57,11 +55,9 @@ function ProfileBalance() {
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
                   {transaction.name}
                 </Typography>{" "}
-                {/* flexGrow ensures it takes up available space */}
               </Box>
               <Typography variant="body1">${transaction.amount}</Typography>
             </Box>
-            {/* Add a Divider after each transaction except the last one */}
             {index !== transactions.length - 1 && (
               <Divider sx={{ width: "70%", alignSelf: "center" }} />
             )}
