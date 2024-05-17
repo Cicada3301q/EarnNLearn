@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Divider, Button } from "@mui/material";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import PageWrapper from "../../components/PageWrapper";
 import { useQuery } from "../../hooks/useQuery";
+import WithdrawCreationModal from "../../components/WithdrawCreationModal";
 
 function ProfileBalance() {
   const { id } = useParams();
-
   const childUserResponse = useQuery(`child-${id}`, `user/child/${id}`);
-
   const { data: childUser, isLoading: isChildUserLoading } = childUserResponse;
 
-  const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 }; // Added lifetimeEarnings for demonstration
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+
+  const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 };
   const transactions = [
     { id: 1, name: "Mow the Lawn", amount: 5, type: "deposit" },
     { id: 2, name: "Weekly Allowance", amount: 10, type: "deposit" },
@@ -54,7 +58,7 @@ function ProfileBalance() {
                 />
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
                   {transaction.name}
-                </Typography>{" "}
+                </Typography>
               </Box>
               <Typography variant="body1">${transaction.amount}</Typography>
             </Box>
@@ -65,13 +69,16 @@ function ProfileBalance() {
         ))}
       </Box>
       <Button
-        component={Link}
-        to="/redeem-request"
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
+        onClick={handleOpenModal}
       >
         Withdraw
       </Button>
+      <WithdrawCreationModal
+        open={isModalOpen}
+        handleClose={handleCloseModal}
+      />
     </PageWrapper>
   );
 }
