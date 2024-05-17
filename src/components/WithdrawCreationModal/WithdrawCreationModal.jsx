@@ -1,18 +1,29 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Stack, Avatar, Paper } from "@mui/material";
 import { Modal, Title } from "./WithdrawModal.css";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function WithdrawCreationModal({ open, handleClose }) {
-  const navigate = useNavigate();
   const [requestName, setRequestName] = useState("");
-  const [requestValue, setRequestValue] = useState("");
+  const [requestValue, setRequestValue] = useState(0);
+  const [errors, setErrors] = useState({});
+
+  const validateFields = () => {
+    const newErrors = {};
+    if (!requestName.trim()) newErrors.requestName = "Request name is required";
+    if (requestValue <= 0)
+      newErrors.requestValue = "Request value must be greater than zero";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleCreate = () => {
-    console.log({
-      requestName,
-      requestValue,
-    });
+    if (!validateFields()) {
+      toast.error("Please correct the errors before submitting.");
+      return;
+    }
+
     handleClose();
   };
 
@@ -43,6 +54,8 @@ function WithdrawCreationModal({ open, handleClose }) {
             value={requestName}
             onChange={(e) => setRequestName(e.target.value)}
             sx={{ mb: 2, width: "40%" }}
+            error={!!errors.requestName}
+            helperText={errors.requestName}
           />
           <TextField
             label="Request Value"
@@ -52,6 +65,8 @@ function WithdrawCreationModal({ open, handleClose }) {
             onChange={(e) => setRequestValue(parseInt(e.target.value))}
             InputProps={{ inputProps: { min: 0 } }}
             sx={{ mb: 2, width: "40%" }}
+            error={!!errors.requestValue}
+            helperText={errors.requestValue}
           />
           <Stack
             direction="row"
