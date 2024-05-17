@@ -18,5 +18,8 @@ export default defineConfig(({ mode }) => {
     build: {
       minify: false,
     },
+    resolve: {
+      extensions: [".js", ".jsx", ".ts", ".tsx"],
+    },
   };
 });
