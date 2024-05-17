@@ -3,7 +3,7 @@ import { Box, TextField, Button, Stack, Avatar, Paper } from "@mui/material";
 import { Modal, Title } from "./WithdrawModal.css";
 import { toast } from "react-toastify";
 
-function WithdrawCreationModal({ open, handleClose }) {
+function WithdrawCreationModal({ open, handleClose, handleCreate, childId }) {
   const [requestName, setRequestName] = useState("");
   const [requestValue, setRequestValue] = useState(0);
   const [errors, setErrors] = useState({});
@@ -18,17 +18,20 @@ function WithdrawCreationModal({ open, handleClose }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCreate = () => {
+  const handleCreateClick = () => {
     if (!validateFields()) {
       toast.error("Please correct the errors before submitting.");
       return;
     }
 
-    handleClose();
-  };
+    const transactionData = {
+      description: requestName,
+      amount: requestValue,
+      status: "PENDING",
+      childId: childId,
+    };
 
-  const handleCancel = () => {
-    handleClose();
+    handleCreate(transactionData);
   };
 
   return (
@@ -73,10 +76,14 @@ function WithdrawCreationModal({ open, handleClose }) {
             spacing={2}
             sx={{ mt: 4, width: "100%", justifyContent: "center" }}
           >
-            <Button variant="contained" color="primary" onClick={handleCreate}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateClick}
+            >
               Create
             </Button>
-            <Button variant="outlined" color="secondary" onClick={handleCancel}>
+            <Button variant="outlined" color="secondary" onClick={handleClose}>
               Cancel
             </Button>
           </Stack>
