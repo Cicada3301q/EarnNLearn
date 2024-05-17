@@ -1,81 +1,146 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Box, Typography, Divider, Button } from "@mui/material";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import PageWrapper from "../../components/PageWrapper";
 import { useQuery } from "../../hooks/useQuery";
+import WithdrawCreationModal from "../../components/WithdrawCreationModal";
+import { QueryContext } from "../../context/QueryContextProvider";
+import { useAuth } from "../../hooks/useAuth";
+import { HTTP_METHOD, ROLE, TRANSACTION_STATUS } from "../../constants/enums";
+import { useMutation } from "../../hooks/useMutation";
+import { toast } from "react-toastify";
 
 function ProfileBalance() {
+  const { invalidateQueryKey } = useContext(QueryContext);
   const { id } = useParams();
+  const { user } = useAuth();
+  const isParent = user?.role === ROLE.PARENT; //change to child
 
-  const { data: child, isLoading: childLoading } = useQuery(
-    `child-${id}`,
-    `user/child/${id}`
+  const queryKey = `transaction-${id}`;
+
+  const childUserResponse = useQuery(`child-${id}`, `user/child/${id}`);
+
+  const { data: childUser, isLoading: isChildUserLoading } = childUserResponse;
+
+  const transactionDataResponse = useQuery(
+    queryKey,
+    `transactions/transaction/${id}`
   );
 
-  const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 }; // Added lifetimeEarnings for demonstration
-  const transactions = [
-    { id: 1, name: "Mow the Lawn", amount: 5, type: "deposit" },
-    { id: 2, name: "Weekly Allowance", amount: 10, type: "deposit" },
-    { id: 3, name: "Candy Store", amount: -3, type: "withdrawal" },
-    // ... more transactions
-  ];
+  const {
+    data: transactionData,
+    isLoading: transactionLoading,
+    isError: transactionError,
+  } = transactionDataResponse;
 
+  const transactionList =
+    !transactionLoading && !transactionError && transactionData.transactionList;
+
+  const [openCreationModal, setOpenCreationModal] = useState(false);
+
+  const { mutate: createWithdrawal } = useMutation();
+
+  const handleCreateWithdrawl = (transaction) => {
+    createWithdrawal({
+      route: "transactions/transaction",
+      method: HTTP_METHOD.POST,
+      body: transaction,
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Chore created successfully!");
+          handleCloseModal();
+        },
+        onError: () => {
+          toast.error("Failed to create chore");
+        },
+      },
+    });
+  };
+
+  const handleCloseModal = () => {
+    setOpenCreationModal(false);
+  };
+
+  const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case TRANSACTION_STATUS.DEPOSIT:
+        return "green";
+      case TRANSACTION_STATUS.PENDING:
+        return "lightblue";
+      case TRANSACTION_STATUS.WITHDRAWAL:
+        return "lightred";
+      case TRANSACTION_STATUS.DENIED:
+        return "red";
+
+      default:
+        return "gray"; // Default color for any other status
+    }
+  };
+
+  if (transactionLoading) {
+    return <div>...load</div>;
+  }
   return (
     <PageWrapper>
       <CircularProgressBar
         size={150}
         thickness={4}
-        value={profile.balance}
-        maxValue={profile.lifetimeEarnings}
-        name={childLoading ? "loading.." : child.firstName}
+        value={transactionData.totalSaved}
+        maxValue={transactionData.totalEarnings}
+        name={isChildUserLoading ? "loading.." : childUser.firstName}
       />
       <ProfileSwitch />
       <Typography component="h2" variant="h5" sx={{ marginY: 2 }}>
         Transactions
       </Typography>
       <Box sx={{ overflowY: "auto", maxHeight: "200px", width: "80%" }}>
-        {transactions.map((transaction, index) => (
+        {transactionList.map((transaction, index) => (
           <Box key={transaction.id}>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between", // This spreads out the children to both ends
-                paddingY: 1, // Adds padding to the top and bottom
+                justifyContent: "space-between",
+                paddingY: 1,
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <FiberManualRecordIcon
                   sx={{
-                    color: transaction.type === "deposit" ? "green" : "red",
+                    color: getStatusColor(transaction.status),
                     marginRight: 2,
                   }}
                 />
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  {transaction.name}
-                </Typography>{" "}
-                {/* flexGrow ensures it takes up available space */}
+                  {transaction.description}
+                </Typography>
               </Box>
               <Typography variant="body1">${transaction.amount}</Typography>
             </Box>
-            {/* Add a Divider after each transaction except the last one */}
-            {index !== transactions.length - 1 && (
+            {index !== transactionList.length - 1 && (
               <Divider sx={{ width: "70%", alignSelf: "center" }} />
             )}
           </Box>
         ))}
       </Box>
-      <Button
-        component={Link}
-        to="/redeem-request"
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-      >
-        Withdraw
-      </Button>
+      {isParent && (
+        <Button variant="contained" onClick={() => setOpenCreationModal(true)}>
+          withdrawal
+        </Button>
+      )}
+      {openCreationModal && (
+        <WithdrawCreationModal
+          open={openCreationModal}
+          handleClose={handleCloseModal}
+          handleCreate={handleCreateWithdrawl}
+          childId={id}
+        />
+      )}
     </PageWrapper>
   );
 }
