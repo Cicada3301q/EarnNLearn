@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Login from "./pages/Login";
+import Login from "/pages/Login/Login";
 import Register from "./pages/Register";
 import ProfileSelect from "./pages/ProfileSelect";
 import ProfileBalance from "./pages/ProfileBalance";
