@@ -16,7 +16,14 @@ export default defineConfig(({ mode }) => {
       port: 3000,
     },
     build: {
+      manifest: true,
       minify: false,
+      target: "esnext",
+      rollupOptions: {
+        output: {
+          format: "esm",
+        },
+      },
     },
     resolve: {
       extensions: [".js", ".jsx", ".ts", ".tsx"],
