@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     resolve: {
-      extensions: [".js", ".jsx", ".ts", ".tsx"],
+      extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"],
     },
   };
 });
