@@ -128,7 +128,7 @@ function ProfileBalance() {
           </Box>
         ))}
       </Box>
-      {isParent && (
+      {!isParent && (
         <Button variant="contained" onClick={() => setOpenCreationModal(true)}>
           withdrawal
         </Button>
