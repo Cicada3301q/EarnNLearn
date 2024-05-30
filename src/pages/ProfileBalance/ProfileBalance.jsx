@@ -51,11 +51,11 @@ function ProfileBalance() {
       options: {
         onSuccess: () => {
           invalidateQueryKey(queryKey);
-          toast.success("Chore created successfully!");
+          toast.success("Transaction created successfully!");
           handleCloseModal();
         },
         onError: () => {
-          toast.error("Failed to create chore");
+          toast.error("Failed to create Transaction");
         },
       },
     });
@@ -90,8 +90,8 @@ function ProfileBalance() {
       <CircularProgressBar
         size={150}
         thickness={4}
-        value={transactionData.totalSaved}
-        maxValue={transactionData.totalEarnings}
+        value={transactionData.totalSaved || 0}
+        maxValue={transactionData.totalEarnings || 0}
         name={isChildUserLoading ? "loading.." : childUser.firstName}
       />
       <ProfileSwitch />
