@@ -90,8 +90,8 @@ function ProfileBalance() {
       <CircularProgressBar
         size={150}
         thickness={4}
-        value={transactionData.totalSaved || 0}
-        maxValue={transactionData.totalEarnings || 0}
+        value={transactionData?.totalSaved || 0}
+        maxValue={transactionData?.totalEarnings || 1}
         name={isChildUserLoading ? "loading.." : childUser.firstName}
       />
       <ProfileSwitch />
