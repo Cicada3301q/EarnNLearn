@@ -1,12 +1,17 @@
 import React, { useState, useContext } from "react";
-import { Typography, IconButton } from "@mui/material";
+import { Typography, IconButton, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ProfileSwitch from "../../components/ProfileSwitch";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CHORE_STATUS, HTTP_METHOD, ROLE } from "../../constants/enums";
+import {
+  CHORE_STATUS,
+  HTTP_METHOD,
+  ROLE,
+  TRANSACTION_STATUS,
+} from "../../constants/enums";
 import { useQuery } from "../../hooks/useQuery";
 import PageWrapper from "../../components/PageWrapper";
 import { useMutation } from "../../hooks/useMutation";
@@ -27,6 +32,7 @@ function ProfileChores() {
   const { mutate: deleteChore } = useMutation();
   const { mutate: changeChoreStatus } = useMutation();
   const { mutate: createChore } = useMutation();
+  const { mutate: createTransaction } = useMutation();
 
   const childUserResponse = useQuery(`child-${id}`, `user/child/${id}`);
 
@@ -79,6 +85,47 @@ function ProfileChores() {
         },
         onError: () => {
           toast.error("Failed to update chore.");
+        },
+      },
+    });
+  };
+
+  const handleApproveChore = (chore) => {
+    changeChoreStatus({
+      route: `chores/update/${chore.choreId}`,
+      method: HTTP_METHOD.PUT,
+      body: {
+        status: CHORE_STATUS.COMPLETED,
+      },
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Chore marked as completed successfully");
+          handleCreateTransaction(chore);
+        },
+        onError: () => {
+          toast.error("Failed to mark chore as completed.");
+        },
+      },
+    });
+  };
+
+  const handleCreateTransaction = (chore) => {
+    createTransaction({
+      route: "transactions/transaction",
+      method: HTTP_METHOD.POST,
+      body: {
+        childId: chore.childUserId,
+        amount: chore.amount,
+        status: TRANSACTION_STATUS.DEPOSIT,
+        description: `Payment for: ${chore.title}`,
+      },
+      options: {
+        onSuccess: () => {
+          toast.success("Transaction created successfully!");
+        },
+        onError: () => {
+          toast.error("Failed to create transaction.");
         },
       },
     });
@@ -159,23 +206,44 @@ function ProfileChores() {
                 </div>
               </div>
               <div className="options-container">
-                <S.Select
-                  value={chore.status}
-                  onChange={(event) => handleStatusChange(event, chore.choreId)}
-                >
-                  {statusOptions.map((option) => (
-                    <S.MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </S.MenuItem>
-                  ))}
-                </S.Select>
-                {isParent && (
-                  <IconButton
-                    onClick={() => removeChore(chore.choreId)}
-                    color="error"
+                {!isParent && chore.status !== CHORE_STATUS.COMPLETED && (
+                  <S.Select
+                    value={chore.status}
+                    onChange={(event) =>
+                      handleStatusChange(event, chore.choreId)
+                    }
                   >
-                    <DeleteOutlineIcon />
-                  </IconButton>
+                    {statusOptions
+                      .filter(
+                        (option) => option.value !== CHORE_STATUS.COMPLETED
+                      )
+                      .map((option) => (
+                        <S.MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </S.MenuItem>
+                      ))}
+                  </S.Select>
+                )}
+                {isParent && (
+                  <>
+                    {chore.status === CHORE_STATUS.APPROVAL && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          handleApproveChore(chore, console.log(chore))
+                        }
+                      >
+                        Approve
+                      </Button>
+                    )}
+                    <IconButton
+                      onClick={() => removeChore(chore.choreId)}
+                      color="error"
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                  </>
                 )}
               </div>
             </S.ItemContainer>
