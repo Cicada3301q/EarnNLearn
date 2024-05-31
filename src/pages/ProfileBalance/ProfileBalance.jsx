@@ -17,7 +17,7 @@ function ProfileBalance() {
   const { invalidateQueryKey } = useContext(QueryContext);
   const { id } = useParams();
   const { user } = useAuth();
-  const isParent = user?.role === ROLE.PARENT; //change to child
+  const isParent = user?.role === ROLE.PARENT;
 
   const queryKey = `transaction-${id}`;
 
@@ -42,6 +42,8 @@ function ProfileBalance() {
   const [openCreationModal, setOpenCreationModal] = useState(false);
 
   const { mutate: createWithdrawal } = useMutation();
+  const { mutate: updateTransaction } = useMutation();
+  const { mutate: deleteTransaction } = useMutation();
 
   const handleCreateWithdrawl = (transaction) => {
     createWithdrawal({
@@ -61,11 +63,48 @@ function ProfileBalance() {
     });
   };
 
+  const handleApprove = (transactionId) => {
+    updateTransaction({
+      route: `transactions/update/${transactionId}`,
+      method: HTTP_METHOD.PUT,
+      body: {
+        status: TRANSACTION_STATUS.WITHDRAWAL,
+      },
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Transaction approved!");
+        },
+        onError: () => {
+          toast.error("Failed to approve transaction");
+        },
+      },
+    });
+  };
+
+  const handleDeny = (transactionId) => {
+    updateTransaction({
+      route: `transactions/update/${transactionId}`,
+      method: HTTP_METHOD.PUT,
+      body: {
+        status: TRANSACTION_STATUS.DENIED,
+      },
+      options: {
+        onSuccess: () => {
+          invalidateQueryKey(queryKey);
+          toast.success("Transaction denied successfully!");
+        },
+        onError: () => {
+          toast.error("Failed to deny transaction");
+        },
+      },
+    });
+  };
+
   const handleCloseModal = () => {
     setOpenCreationModal(false);
   };
 
-  const profile = { name: "Alice", balance: 50, lifetimeEarnings: 100 };
   const getStatusColor = (status) => {
     switch (status) {
       case TRANSACTION_STATUS.DEPOSIT:
@@ -76,15 +115,15 @@ function ProfileBalance() {
         return "lightred";
       case TRANSACTION_STATUS.DENIED:
         return "red";
-
       default:
-        return "gray"; // Default color for any other status
+        return "gray";
     }
   };
 
   if (transactionLoading) {
     return <div>...load</div>;
   }
+
   return (
     <PageWrapper>
       <CircularProgressBar
@@ -122,6 +161,24 @@ function ProfileBalance() {
               </Box>
               <Typography variant="body1">${transaction.amount}</Typography>
             </Box>
+            {isParent && transaction.status === TRANSACTION_STATUS.PENDING && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleApprove(transaction.id)}
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleDeny(transaction.id)}
+                >
+                  Deny
+                </Button>
+              </Box>
+            )}
             {index !== transactionList.length - 1 && (
               <Divider sx={{ width: "70%", alignSelf: "center" }} />
             )}
