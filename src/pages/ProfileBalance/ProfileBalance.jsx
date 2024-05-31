@@ -159,26 +159,29 @@ function ProfileBalance() {
                   {transaction.description}
                 </Typography>
               </Box>
-              <Typography variant="body1">${transaction.amount}</Typography>
-            </Box>
-            {isParent && transaction.status === TRANSACTION_STATUS.PENDING && (
-              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleApprove(transaction.id)}
-                >
-                  Approve
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleDeny(transaction.id)}
-                >
-                  Deny
-                </Button>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {isParent &&
+                  transaction.status === TRANSACTION_STATUS.PENDING && (
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleApprove(transaction.id)}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleDeny(transaction.id)}
+                      >
+                        Deny
+                      </Button>
+                    </Box>
+                  )}
+                <Typography variant="body1">${transaction.amount}</Typography>
               </Box>
-            )}
+            </Box>
             {index !== transactionList.length - 1 && (
               <Divider sx={{ width: "70%", alignSelf: "center" }} />
             )}
