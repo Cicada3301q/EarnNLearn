@@ -50,7 +50,7 @@ function ProfileSelect() {
       <PageTitle>Children</PageTitle>
       {isLoading && <ProfileSelectSkeleton />}
       {isError && (
-        <S.MessageContainer error={error}>
+        <S.MessageContainer error={isError}>
           We failed to get the children :(
         </S.MessageContainer>
       )}
